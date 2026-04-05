@@ -17,6 +17,25 @@ export interface CompanyProfile {
   keyPeople: Person[];
   fundingHistory: FundingRound[];
   competitors: string[];
+  stockTickers: string[];
+  exchanges: string[];
+  financials: {
+    revenue: { value: number; unit: string; period: string } | null;
+    netIncome: { value: number; unit: string; period: string } | null;
+    totalAssets: { value: number; unit: string; period: string } | null;
+    totalLiabilities: { value: number; unit: string; period: string } | null;
+    stockholdersEquity: { value: number; unit: string; period: string } | null;
+    period: string | null;
+  } | null;
+  recentFilings: { form: string; filingDate: string; primaryDocument: string; description: string }[];
+  sicCode: string | null;
+  domainRegistration: {
+    registrar: string | null;
+    registrationDate: string | null;
+    expirationDate: string | null;
+    domainAge: string | null;
+    nameservers: string[];
+  } | null;
   confidence: number; // 0-1, how much data we found
   sources: string[];
   fetchedAt: string;
