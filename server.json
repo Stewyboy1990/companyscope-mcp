@@ -1,0 +1,37 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "CompanyScope",
+  "description": "Company intelligence aggregator — one MCP tool call returns a full company profile with founding info, tech stack, key people, news, and corporate data from 6 free public data sources.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Stewyboy1990/companyscope-mcp"
+  },
+  "maintainers": ["Stewyboy1990"],
+  "tags": ["company", "intelligence", "research", "web-scraping", "github", "wikipedia", "business"],
+  "tools": [
+    {
+      "name": "lookup_company",
+      "description": "Get a comprehensive company profile from a domain or company name"
+    },
+    {
+      "name": "get_tech_stack",
+      "description": "Detect the technology stack a company uses"
+    },
+    {
+      "name": "get_key_people",
+      "description": "Find key people at a company with titles and contact info"
+    },
+    {
+      "name": "get_company_news",
+      "description": "Get recent news articles about a company"
+    },
+    {
+      "name": "get_funding_history",
+      "description": "Look up corporate registry information"
+    }
+  ],
+  "transport": {
+    "type": "streamable-http",
+    "url": "https://companyscope-mcp.stewwilli.workers.dev/mcp"
+  }
+}
