@@ -8,11 +8,12 @@ Company intelligence in one tool call. Get comprehensive company profiles, tech 
 
 | Tool | Description |
 |------|-------------|
-| `lookup_company` | Full company profile — founding info, description, tech stack, key people, news, corporate data |
+| `lookup_company` | Full company profile — founding info, description, tech stack, key people, news, corporate data, financials |
 | `get_tech_stack` | Detect frameworks, languages, hosting, and analytics a company uses |
 | `get_key_people` | Find founders, executives, and team members with titles |
 | `get_company_news` | Recent news articles about a company |
-| `get_funding_history` | Corporate registry data — incorporation, jurisdiction, officers |
+| `get_corporate_registry` | Corporate registry data — incorporation, jurisdiction, officers (140+ countries) |
+| `get_financials` | SEC EDGAR financial data — revenue, net income, assets, liabilities, stock tickers, recent filings |
 
 ## Quick Start
 
@@ -60,14 +61,16 @@ npm run deploy
 
 ## Data Sources
 
-All data is aggregated from **free public APIs** — no paid API keys required for core functionality:
+All data is aggregated from **8 free public sources** — no paid API keys required for core functionality:
 
 | Source | Data Provided |
 |--------|--------------|
 | Website scraping | Company name, description, tech stack, social links |
 | GitHub API | Programming languages, top repos, org info |
 | Wikipedia | Company summary, founding year, HQ, employees, industry, revenue, founders, CEO |
-| OpenCorporates | Incorporation date, jurisdiction, registered officers |
+| SEC EDGAR | Revenue, net income, total assets, liabilities, equity, stock tickers, SEC filings |
+| RDAP | Domain registrar, registration date, nameservers, domain age |
+| OpenCorporates | Incorporation date, jurisdiction, registered officers (140+ countries) |
 | Hunter.io (optional) | Email patterns, key contacts |
 | NewsAPI (optional) | Recent news articles |
 
