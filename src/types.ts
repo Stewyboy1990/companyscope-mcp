@@ -1,0 +1,53 @@
+export interface CompanyProfile {
+  domain: string;
+  name: string | null;
+  description: string | null;
+  founded: string | null;
+  employeeCount: string | null;
+  industry: string | null;
+  headquarters: string | null;
+  website: string | null;
+  socialProfiles: {
+    linkedin: string | null;
+    twitter: string | null;
+    github: string | null;
+  };
+  techStack: string[];
+  recentNews: NewsItem[];
+  keyPeople: Person[];
+  fundingHistory: FundingRound[];
+  competitors: string[];
+  confidence: number; // 0-1, how much data we found
+  sources: string[];
+  fetchedAt: string;
+}
+
+export interface NewsItem {
+  title: string;
+  url: string;
+  source: string;
+  publishedAt: string;
+  snippet: string;
+}
+
+export interface Person {
+  name: string;
+  title: string | null;
+  source: string;
+}
+
+export interface FundingRound {
+  date: string | null;
+  amount: string | null;
+  round: string | null;
+  investors: string[];
+  source: string;
+}
+
+export interface Env {
+  CACHE: KVNamespace;
+  ENVIRONMENT: string;
+  OPENCORPORATES_TOKEN?: string;
+  HUNTER_API_KEY?: string;
+  NEWS_API_KEY?: string;
+}

@@ -1,0 +1,12 @@
+name = "companyscope-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-04-04"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "development"
+
+# KV namespace for caching company data
+[[kv_namespaces]]
+binding = "CACHE"
+id = "0b3194e963954c98b6f459c3d08eb3e4"
