@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CompanyScope MCP Server - Free Company Intelligence for AI Agents</title>
+<meta name="description" content="Get full company profiles from a single MCP tool call. 8 free data sources: SEC EDGAR financials, tech stack, key people, corporate registry, news. Works with Claude, Cursor, Cline. No API keys needed.">
+<meta name="keywords" content="MCP server, company intelligence, company data enrichment, lead enrichment, sales prospecting, SEC EDGAR, tech stack detection, AI agent tools, Model Context Protocol, Claude Desktop, Cursor, Cline, B2B research, competitive intelligence, company profile API, free company data">
+<meta property="og:title" content="CompanyScope MCP - Company Intelligence in One Tool Call">
+<meta property="og:description" content="Free company intelligence MCP server. 8 data sources, 6 tools, one call. Works with Claude, Cursor, Cline.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stewyboy1990.github.io/companyscope-mcp/">
+<link rel="canonical" href="https://stewyboy1990.github.io/companyscope-mcp/">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1a1a2e;background:#f8f9fc;line-height:1.7}
+.hero{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:4rem 1.5rem;text-align:center}
+.hero h1{font-size:2.5rem;margin-bottom:.75rem;font-weight:800}
+.hero p{font-size:1.15rem;opacity:.9;max-width:650px;margin:0 auto}
+.badge{display:inline-block;background:rgba(255,255,255,.2);padding:.3rem .85rem;border-radius:20px;font-size:.85rem;margin-top:1.25rem}
+.container{max-width:860px;margin:0 auto;padding:2.5rem 1.5rem}
+.card{background:#fff;border-radius:12px;padding:1.75rem;margin-bottom:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card h2{font-size:1.4rem;margin-bottom:1rem;color:#333}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:1.5rem 0}
+.stat{text-align:center;padding:1rem;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stat .num{font-size:2rem;font-weight:800;color:#667eea}
+.stat .label{font-size:.8rem;color:#777;text-transform:uppercase;letter-spacing:.5px}
+.tools{display:grid;gap:.75rem}
+.tool{background:#f0f4ff;border-radius:8px;padding:1rem}
+.tool code{font-weight:700;color:#4a5aba;font-size:.95rem}
+.tool p{font-size:.88rem;color:#555;margin-top:.25rem}
+.connect{background:#1a1a2e;color:#e0e0e0;border-radius:8px;padding:1.5rem;font-family:'SF Mono',Menlo,monospace;font-size:.85rem;overflow-x:auto;white-space:pre;line-height:1.6}
+.data-sources{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.src{background:#e8f5e9;color:#2e7d32;padding:.3rem .7rem;border-radius:6px;font-size:.82rem;font-weight:500}
+a{color:#667eea;text-decoration:none}
+a:hover{text-decoration:underline}
+.cta{display:inline-block;background:#667eea;color:#fff;padding:.7rem 1.75rem;border-radius:8px;text-decoration:none;font-weight:600;margin-top:1rem;transition:background .2s}
+.cta:hover{background:#5a6fd6;text-decoration:none}
+.cta-secondary{background:transparent;border:2px solid #667eea;color:#667eea}
+.cta-secondary:hover{background:#667eea;color:#fff}
+.example{background:#f8f9fc;border:1px solid #e0e4ef;border-radius:8px;padding:1.25rem;font-family:'SF Mono',Menlo,monospace;font-size:.8rem;overflow-x:auto;white-space:pre;max-height:350px;overflow-y:auto;line-height:1.5}
+footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
+.use-cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.use-case{padding:1rem;border-left:3px solid #667eea}
+.use-case strong{display:block;margin-bottom:.25rem;color:#333}
+.use-case p{font-size:.88rem;color:#666}
+@media(max-width:600px){.hero h1{font-size:1.8rem}.stat .num{font-size:1.5rem}}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CompanyScope MCP Server",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "description": "Free company intelligence MCP server. One tool call returns a full company profile from 8 data sources: SEC EDGAR, Wikipedia, GitHub, web scraping, RDAP, OpenCorporates, Hunter.io, NewsAPI.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Stewyboy1990",
+    "url": "https://github.com/Stewyboy1990"
+  }
+}
+</script>
+</head>
+<body>
+<div class="hero">
+  <h1>CompanyScope MCP</h1>
+  <p>Company intelligence for AI agents. One tool call returns a full company profile from 8 free data sources.</p>
+  <span class="badge">Free Tier: 25 calls/day &mdash; No API keys needed</span>
+  <br>
+  <a class="cta" href="#connect" style="margin-top:1.5rem">Get Started in 30 Seconds</a>
+</div>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="num">8</div><div class="label">Data Sources</div></div>
+    <div class="stat"><div class="num">6</div><div class="label">MCP Tools</div></div>
+    <div class="stat"><div class="num">140+</div><div class="label">Countries Covered</div></div>
+    <div class="stat"><div class="num">$0</div><div class="label">API Keys Needed</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Why CompanyScope?</h2>
+    <p>Stop juggling 8 different APIs. CompanyScope aggregates Wikipedia, GitHub, SEC EDGAR, RDAP, OpenCorporates, web scraping, Hunter.io, and NewsAPI into a single structured response. One tool call, full company profile.</p>
+    <ul style="margin-top:1rem;padding-left:1.25rem;color:#555">
+      <li><strong>SEC financial data</strong> &mdash; Revenue, net income, total assets, stock tickers, and recent 10-K/10-Q filings</li>
+      <li><strong>Tech stack detection</strong> &mdash; 19+ frameworks, languages, hosting, and analytics via DNS + HTTP headers</li>
+      <li><strong>Corporate registry</strong> &mdash; Incorporation data from 140+ jurisdictions via OpenCorporates</li>
+      <li><strong>Domain intelligence</strong> &mdash; RDAP lookups for registrar, domain age, and nameservers</li>
+      <li><strong>Key people</strong> &mdash; Founders, C-suite, team members from Wikipedia and web scraping</li>
+      <li><strong>Zero setup</strong> &mdash; No API keys, no accounts, no configuration. Connect and start querying.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>6 MCP Tools</h2>
+    <div class="tools">
+      <div class="tool"><code>lookup_company</code><p>Full profile: description, founding, HQ, employees, tech stack, key people, financials, news, domain data</p></div>
+      <div class="tool"><code>get_tech_stack</code><p>Detect 19+ frameworks, languages, hosting, and analytics from website + GitHub repos</p></div>
+      <div class="tool"><code>get_key_people</code><p>Founders, executives, team members with titles from Wikipedia and web scraping</p></div>
+      <div class="tool"><code>get_financials</code><p>SEC EDGAR: revenue, net income, assets, liabilities, stock tickers, recent 10-K/10-Q/8-K filings</p></div>
+      <div class="tool"><code>get_corporate_registry</code><p>Incorporation data, officers, jurisdiction from OpenCorporates (140+ countries)</p></div>
+      <div class="tool"><code>get_company_news</code><p>Recent news articles about any company (requires optional NewsAPI key)</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>8 Free Data Sources</h2>
+    <div class="data-sources">
+      <span class="src">Wikipedia</span>
+      <span class="src">GitHub API</span>
+      <span class="src">Web Scraping</span>
+      <span class="src">SEC EDGAR</span>
+      <span class="src">RDAP</span>
+      <span class="src">OpenCorporates</span>
+      <span class="src">Hunter.io</span>
+      <span class="src">NewsAPI</span>
+    </div>
+    <p style="margin-top:1rem;font-size:.9rem;color:#555">All core sources are free and public. Wikipedia, GitHub, SEC EDGAR, RDAP, and web scraping provide rich profiles without any API keys.</p>
+  </div>
+
+  <div class="card" id="connect">
+    <h2>Connect in 30 Seconds</h2>
+    <p style="font-size:.9rem;color:#555;margin-bottom:1rem">Add to Claude Desktop, Cursor, Cline, or any MCP client:</p>
+    <div class="connect">{
+  "mcpServers": {
+    "companyscope": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://companyscope-mcp.stewwilli.workers.dev/mcp"
+      ]
+    }
+  }
+}</div>
+    <p style="margin-top:1rem;font-size:.85rem;color:#777">Or connect directly via Streamable HTTP at <code>https://companyscope-mcp.stewwilli.workers.dev/mcp</code></p>
+  </div>
+
+  <div class="card">
+    <h2>Example: lookup_company("apple.com")</h2>
+    <div class="example">{
+  "name": "APPLE INC",
+  "description": "Apple Inc. is an American multinational corporation...",
+  "founded": "April 1, 1976",
+  "industry": "Electronic Computers",
+  "headquarters": "Cupertino, California, U.S.",
+  "employees": 164000,
+  "stockTickers": ["AAPL"],
+  "financials": {
+    "revenue": "$391B (FY 2024)",
+    "netIncome": "$93.7B (FY 2024)",
+    "totalAssets": "$365B (FY 2024)"
+  },
+  "techStack": ["React", "Next.js", "Swift", "Objective-C"],
+  "keyPeople": [
+    {"name": "Tim Cook", "title": "CEO"},
+    {"name": "Steve Jobs", "title": "Co-founder"}
+  ],
+  "domain": {
+    "registrar": "CSC Corporate Domains, Inc.",
+    "registrationDate": "1987-02-19"
+  },
+  "confidence": 0.86,
+  "sources": ["apple.com", "github.com", "wikipedia.org", "sec.gov"]
+}</div>
+  </div>
+
+  <div class="card">
+    <h2>Use Cases</h2>
+    <div class="use-cases">
+      <div class="use-case">
+        <strong>Sales Prospecting</strong>
+        <p>Research target companies before outreach. Get tech stack, team size, and financial health in one call.</p>
+      </div>
+      <div class="use-case">
+        <strong>Due Diligence</strong>
+        <p>Pull revenue, net income, total assets, and recent SEC filings for any US public company.</p>
+      </div>
+      <div class="use-case">
+        <strong>Competitive Intelligence</strong>
+        <p>Compare competitor tech stacks, team composition, and domain history side by side.</p>
+      </div>
+      <div class="use-case">
+        <strong>AI Agent Workflows</strong>
+        <p>Let your AI assistant autonomously research companies, enrich CRM records, or build prospect lists.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h2>Open Source &amp; Free</h2>
+    <p style="font-size:.95rem;color:#555;margin-bottom:1rem">Built with Cloudflare Workers + MCP SDK. MIT licensed. Also available on Apify.</p>
+    <a class="cta" href="https://github.com/Stewyboy1990/companyscope-mcp">View on GitHub</a>
+    <a class="cta cta-secondary" href="https://apify.com/constructive_wainscot/companyscope-mcp" style="margin-left:.75rem">Apify Actor</a>
+  </div>
+</div>
+
+<footer>
+  CompanyScope MCP Server &mdash; Built by <a href="https://github.com/Stewyboy1990">Stewyboy1990</a>
+  <br><small>Company intelligence from 8 free data sources. Works with Claude Desktop, Cursor, Cline, and any MCP client.</small>
+</footer>
+</body>
+</html>
