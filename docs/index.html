@@ -70,6 +70,18 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How do I add CompanyScope to Claude Desktop?", "acceptedAnswer": {"@type": "Answer", "text": "Open your Claude Desktop config file (Settings > Developer > Edit Config) and add the MCP server connection. Use npx mcp-remote with the endpoint https://companyscope-mcp.stewwilli.workers.dev/mcp."}},
+    {"@type": "Question", "name": "Does CompanyScope work with Cursor and Cline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint. This includes Claude Desktop, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol."}},
+    {"@type": "Question", "name": "What data does CompanyScope return for non-US companies?", "acceptedAnswer": {"@type": "Answer", "text": "Wikipedia, GitHub, web scraping, RDAP, and OpenCorporates work globally across 140+ jurisdictions. SEC EDGAR data is only available for US public companies."}},
+    {"@type": "Question", "name": "How is CompanyScope different from Crunchbase?", "acceptedAnswer": {"@type": "Answer", "text": "CompanyScope is an MCP server designed for AI agents, not a web app. It integrates directly into your AI workflow, aggregates 8 free public sources, and requires no subscription or API key."}}
+  ]
+}
+</script>
 </head>
 <body>
 <div class="hero">
@@ -109,7 +121,7 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
       <div class="tool"><code>get_key_people</code><p>Founders, executives, team members with titles from Wikipedia and web scraping</p></div>
       <div class="tool"><code>get_financials</code><p>SEC EDGAR: revenue, net income, assets, liabilities, stock tickers, recent 10-K/10-Q/8-K filings</p></div>
       <div class="tool"><code>get_corporate_registry</code><p>Incorporation data, officers, jurisdiction from OpenCorporates (140+ countries)</p></div>
-      <div class="tool"><code>get_company_news</code><p>Recent news articles about any company (requires optional NewsAPI key)</p></div>
+      <div class="tool"><code>get_company_news</code><p>Recent news articles about any company via Brave Search (no API key needed on hosted version)</p></div>
     </div>
   </div>
 
@@ -122,10 +134,10 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
       <span class="src">SEC EDGAR</span>
       <span class="src">RDAP</span>
       <span class="src">OpenCorporates</span>
+      <span class="src">Brave Search</span>
       <span class="src">Hunter.io</span>
-      <span class="src">NewsAPI</span>
     </div>
-    <p style="margin-top:1rem;font-size:.9rem;color:#555">All core sources are free and public. Wikipedia, GitHub, SEC EDGAR, RDAP, and web scraping provide rich profiles without any API keys.</p>
+    <p style="margin-top:1rem;font-size:.9rem;color:#555">All core sources are free and public. Wikipedia, GitHub, SEC EDGAR, RDAP, Brave Search, and web scraping provide rich profiles without any API keys.</p>
   </div>
 
   <div class="card" id="connect">
@@ -194,6 +206,30 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
         <p>Let your AI assistant autonomously research companies, enrich CRM records, or build prospect lists.</p>
       </div>
     </div>
+  </div>
+
+  <div class="card">
+    <h2>Frequently Asked Questions</h2>
+    <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
+      <summary style="cursor:pointer;font-weight:600;color:#333">How do I add CompanyScope to Claude Desktop?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Open your Claude Desktop config file (Settings > Developer > Edit Config) and add the connection snippet shown above. Restart Claude Desktop and the tools will appear automatically.</p>
+    </details>
+    <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
+      <summary style="cursor:pointer;font-weight:600;color:#333">Does CompanyScope work with Cursor and Cline?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint at <code>https://companyscope-mcp.stewwilli.workers.dev/mcp</code>. This includes Claude Desktop, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol.</p>
+    </details>
+    <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
+      <summary style="cursor:pointer;font-weight:600;color:#333">What data does it return for non-US companies?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Wikipedia, GitHub, web scraping, RDAP, and OpenCorporates work globally (140+ jurisdictions). SEC EDGAR data is only available for US public companies. You still get a rich profile even without SEC data.</p>
+    </details>
+    <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
+      <summary style="cursor:pointer;font-weight:600;color:#333">Is there a rate limit?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Free tier: 25 tool calls per day. Only actual tool calls count &mdash; MCP initialization and tool listing are unlimited. Contact us for higher limits.</p>
+    </details>
+    <details>
+      <summary style="cursor:pointer;font-weight:600;color:#333">How is this different from Crunchbase or Apollo?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">CompanyScope is an MCP server designed for AI agents, not a web app for humans. It integrates directly into your AI workflow and aggregates 8 free public sources. No subscription, no API key, no signup required.</p>
+    </details>
   </div>
 
   <div class="card" style="text-align:center">
