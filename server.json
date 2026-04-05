@@ -1,13 +1,13 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "name": "CompanyScope",
-  "description": "Company intelligence aggregator — one MCP tool call returns a full company profile with founding info, tech stack, key people, news, and corporate data from 6 free public data sources.",
+  "description": "Company intelligence aggregator — one MCP tool call returns a full company profile with founding info, tech stack, key people, financials, news, and corporate data from 7 free public data sources including Wikipedia, GitHub, SEC EDGAR, and web scraping.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Stewyboy1990/companyscope-mcp"
   },
   "maintainers": ["Stewyboy1990"],
-  "tags": ["company", "intelligence", "research", "web-scraping", "github", "wikipedia", "business"],
+  "tags": ["company", "intelligence", "research", "web-scraping", "github", "wikipedia", "sec-edgar", "financials", "business"],
   "tools": [
     {
       "name": "lookup_company",
@@ -28,6 +28,10 @@
     {
       "name": "get_funding_history",
       "description": "Look up corporate registry information"
+    },
+    {
+      "name": "get_financials",
+      "description": "Get SEC EDGAR financial data — revenue, net income, assets, stock tickers, filings for US public companies"
     }
   ],
   "transport": {
