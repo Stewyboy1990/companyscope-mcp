@@ -14,6 +14,26 @@ import { fetchRDAPData } from "./sources/rdap.js";
 import { getCachedProfile, cacheProfile, getCachedJSON, setCachedJSON } from "./cache.js";
 
 /**
+ * Pick the best company name from multiple sources.
+ * Prefers short, clean names (not taglines or full legal names).
+ */
+function pickBestName(...candidates: (string | null | undefined)[]): string {
+  const names = candidates.filter(
+    (n): n is string => !!n && n.trim().length > 0
+  );
+  if (names.length === 0) return "Unknown";
+
+  // Filter out names that look like taglines (too long, contain action verbs)
+  const clean = names.filter(
+    (n) => n.length <= 60 && !/\b(build|connect|protect|make|get|start|create)\b/i.test(n)
+  );
+
+  // Prefer the shortest clean name (likely the actual company name, not a tagline)
+  const pool = clean.length > 0 ? clean : names;
+  return pool.reduce((a, b) => (a.length <= b.length ? a : b));
+}
+
+/**
  * Normalize a domain: strip protocol, www, trailing slash.
  */
 export function normalizeDomain(input: string): string {
@@ -43,7 +63,7 @@ export async function buildCompanyProfile(
   const [webData, ghData, hunterData, newsData, corpData, wikiData, secData, rdapData] =
     await Promise.allSettled([
       scrapeCompanyWebsite(domain),
-      fetchGitHubProfile(domain),
+      fetchGitHubProfile(domain, env.GITHUB_TOKEN),
       fetchHunterData(domain, env.HUNTER_API_KEY),
       fetchCompanyNews(companyNameGuess, env.NEWS_API_KEY),
       searchOpenCorporates(companyNameGuess, env.OPENCORPORATES_TOKEN),
@@ -58,8 +78,25 @@ export async function buildCompanyProfile(
   const news = newsData.status === "fulfilled" ? newsData.value : [];
   const corp = corpData.status === "fulfilled" ? corpData.value : null;
   const wiki = wikiData.status === "fulfilled" ? wikiData.value : null;
-  const sec = secData.status === "fulfilled" ? secData.value : null;
+  let sec = secData.status === "fulfilled" ? secData.value : null;
   const rdap = rdapData.status === "fulfilled" ? rdapData.value : null;
+
+  // Sanity check: if SEC entity name doesn't closely match the query, discard it
+  // to prevent cross-contamination (e.g., "stripe" matching "AT&T" via short ticker,
+  // or "openai" matching "Opendoor" via shared "open" prefix)
+  if (sec?.entityName) {
+    const query = companyNameGuess.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const secName = sec.entityName.toLowerCase().replace(/[^a-z0-9]/g, "");
+    // Require the query to be a prefix of the SEC name, or vice versa,
+    // with at least 60% character overlap
+    const isPrefix = secName.startsWith(query) || query.startsWith(secName);
+    const shorter = Math.min(query.length, secName.length);
+    const longer = Math.max(query.length, secName.length);
+    const overlapRatio = shorter / longer;
+    if (!isPrefix || overlapRatio < 0.4) {
+      sec = null; // SEC match is for a different company — discard
+    }
+  }
 
   // Merge people from all sources
   const allPeople: Person[] = [];
@@ -166,7 +203,7 @@ export async function buildCompanyProfile(
 
   const profile: CompanyProfile = {
     domain,
-    name: sec?.entityName || corp?.companyName || web.name || gh?.orgName || companyNameGuess,
+    name: pickBestName(web.name, gh?.orgName, corp?.companyName, sec?.entityName, companyNameGuess),
     description: wiki?.summary || web.description || gh?.description || null,
     founded: web.founded || wiki?.founded || corp?.incorporationDate || rdap?.registrationDate || null,
     employeeCount: wiki?.employeeCount || web.employeeCount || null,

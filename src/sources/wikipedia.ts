@@ -25,12 +25,14 @@ export async function fetchWikipediaData(
   companyName: string
 ): Promise<WikiCompanyData | null> {
   try {
+    const UA = { "User-Agent": "CompanyScope/1.0 (https://github.com/Stewyboy1990/companyscope-mcp)" };
+
     // Step 1: Search for the company page
     const searchResp = await fetch(
       `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
         companyName + " company"
       )}&srlimit=3&format=json&origin=*`,
-      { signal: AbortSignal.timeout(6000) }
+      { headers: UA, signal: AbortSignal.timeout(6000) }
     );
 
     if (!searchResp.ok) return null;
@@ -51,13 +53,13 @@ export async function fetchWikipediaData(
         `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
           pageTitle
         )}`,
-        { signal: AbortSignal.timeout(6000) }
+        { headers: UA, signal: AbortSignal.timeout(6000) }
       ),
       fetch(
         `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(
           pageTitle
         )}&prop=wikitext&format=json&origin=*`,
-        { signal: AbortSignal.timeout(6000) }
+        { headers: UA, signal: AbortSignal.timeout(6000) }
       ),
     ]);
 

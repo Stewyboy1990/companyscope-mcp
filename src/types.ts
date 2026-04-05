@@ -69,4 +69,5 @@ export interface Env {
   OPENCORPORATES_TOKEN?: string;
   HUNTER_API_KEY?: string;
   NEWS_API_KEY?: string;
+  GITHUB_TOKEN?: string;
 }

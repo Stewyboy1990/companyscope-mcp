@@ -14,17 +14,23 @@ export interface GitHubProfile {
 }
 
 export async function fetchGitHubProfile(
-  orgOrDomain: string
+  orgOrDomain: string,
+  githubToken?: string
 ): Promise<GitHubProfile | null> {
   const orgName = extractOrgName(orgOrDomain);
   if (!orgName) return null;
 
+  const ghHeaders: Record<string, string> = {
+    Accept: "application/vnd.github.v3+json",
+    "User-Agent": "CompanyScope/1.0",
+  };
+  if (githubToken) {
+    ghHeaders["Authorization"] = `Bearer ${githubToken}`;
+  }
+
   try {
     const orgResp = await fetch(`https://api.github.com/orgs/${orgName}`, {
-      headers: {
-        Accept: "application/vnd.github.v3+json",
-        "User-Agent": "CompanyScope/1.0",
-      },
+      headers: ghHeaders,
       signal: AbortSignal.timeout(5000),
     });
 
@@ -43,10 +49,7 @@ export async function fetchGitHubProfile(
     const reposResp = await fetch(
       `https://api.github.com/orgs/${orgName}/repos?sort=stars&per_page=10`,
       {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          "User-Agent": "CompanyScope/1.0",
-        },
+        headers: ghHeaders,
         signal: AbortSignal.timeout(5000),
       }
     );

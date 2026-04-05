@@ -18,7 +18,10 @@ export async function fetchRDAPData(domain: string): Promise<RDAPData | null> {
   try {
     // Use rdap.org bootstrap which routes to the correct RDAP server
     const resp = await fetch(`https://rdap.org/domain/${domain}`, {
-      headers: { Accept: "application/rdap+json" },
+      headers: {
+        Accept: "application/rdap+json",
+        "User-Agent": "CompanyScope/1.0 (https://github.com/Stewyboy1990/companyscope-mcp)",
+      },
       signal: AbortSignal.timeout(8000),
     });
 

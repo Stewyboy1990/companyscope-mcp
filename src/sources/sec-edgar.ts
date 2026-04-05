@@ -76,17 +76,28 @@ async function loadTickerMap(): Promise<Map<string, { cik: string; ticker: strin
 
 function findCIK(companyName: string, tickers: Map<string, { cik: string; ticker: string; name: string }>): { cik: string; ticker: string; name: string } | null {
     const lower = companyName.toLowerCase().trim();
+    // Strip domain suffix if passed
+    const cleaned = lower.replace(/\.(com|io|org|net|co|ai)$/i, "");
 
-    // Exact match
+    // Exact match on cleaned or original
+    if (tickers.has(cleaned)) return tickers.get(cleaned)!;
     if (tickers.has(lower)) return tickers.get(lower)!;
 
-    // Partial match — find best
+    // Partial match — require key to be substantial (>3 chars) to avoid
+    // matching short tickers like "t" (AT&T) against unrelated queries
     let bestMatch: { cik: string; ticker: string; name: string } | null = null;
     let bestScore = 0;
 
     for (const [key, val] of tickers) {
-        if (key.includes(lower) || lower.includes(key)) {
-            const score = key === lower ? 100 : key.startsWith(lower) ? 80 : 50;
+        // Skip very short keys for substring matching — too many false positives
+        if (key.length <= 3) continue;
+
+        if (key.includes(cleaned) || cleaned.includes(key)) {
+            // Prefer exact prefix matches and longer keys
+            const score = key === cleaned ? 100
+                : key.startsWith(cleaned) ? 90
+                : cleaned.startsWith(key) ? 70 + key.length
+                : 50;
             if (score > bestScore) {
                 bestScore = score;
                 bestMatch = val;
