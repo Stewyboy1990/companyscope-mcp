@@ -344,31 +344,43 @@ export default {
 
     // MCP endpoint
     if (url.pathname === "/mcp") {
-      // Rate limiting: identify by IP or API key
-      const identifier =
-        request.headers.get("x-api-key") ||
-        request.headers.get("cf-connecting-ip") ||
-        "anonymous";
+      // Only rate-limit tool calls, not initialization or listing
+      const bodyClone = request.clone();
+      let isToolCall = false;
+      try {
+        const body = await bodyClone.json() as Record<string, unknown>;
+        const method = Array.isArray(body) ? (body[0] as Record<string, unknown>)?.method : body?.method;
+        isToolCall = method === "tools/call";
+      } catch {}
 
-      const FREE_TIER_LIMIT = 25; // calls per day
-      const rateCheck = await checkRateLimit(env, identifier, FREE_TIER_LIMIT);
+      let rateCheck = { allowed: true, remaining: 25, resetAt: "" };
 
-      if (!rateCheck.allowed) {
-        return new Response(
-          JSON.stringify({
-            error: "Rate limit exceeded",
-            message: `Free tier allows ${FREE_TIER_LIMIT} calls/day. Resets at ${rateCheck.resetAt}. Upgrade to Pro for unlimited access.`,
-          }),
-          {
-            status: 429,
-            headers: {
-              "Content-Type": "application/json",
-              "X-RateLimit-Remaining": "0",
-              "X-RateLimit-Reset": rateCheck.resetAt,
-              ...CORS_HEADERS,
-            },
-          }
-        );
+      if (isToolCall) {
+        const identifier =
+          request.headers.get("x-api-key") ||
+          request.headers.get("cf-connecting-ip") ||
+          "anonymous";
+
+        const FREE_TIER_LIMIT = 25; // tool calls per day
+        rateCheck = await checkRateLimit(env, identifier, FREE_TIER_LIMIT);
+
+        if (!rateCheck.allowed) {
+          return new Response(
+            JSON.stringify({
+              error: "Rate limit exceeded",
+              message: `Free tier allows ${FREE_TIER_LIMIT} tool calls/day. Resets at ${rateCheck.resetAt}. Upgrade to Pro for unlimited access.`,
+            }),
+            {
+              status: 429,
+              headers: {
+                "Content-Type": "application/json",
+                "X-RateLimit-Remaining": "0",
+                "X-RateLimit-Reset": rateCheck.resetAt,
+                ...CORS_HEADERS,
+              },
+            }
+          );
+        }
       }
 
       const server = createServer();
