@@ -65,7 +65,7 @@ export async function buildCompanyProfile(
       scrapeCompanyWebsite(domain),
       fetchGitHubProfile(domain, env.GITHUB_TOKEN),
       fetchHunterData(domain, env.HUNTER_API_KEY),
-      fetchCompanyNews(companyNameGuess, env.NEWS_API_KEY),
+      fetchCompanyNews(companyNameGuess, env.NEWS_API_KEY, env.BRAVE_API_KEY),
       searchOpenCorporates(companyNameGuess, env.OPENCORPORATES_TOKEN),
       fetchWikipediaData(companyNameGuess),
       fetchSECData(companyNameGuess),

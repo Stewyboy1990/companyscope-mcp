@@ -70,4 +70,5 @@ export interface Env {
   HUNTER_API_KEY?: string;
   NEWS_API_KEY?: string;
   GITHUB_TOKEN?: string;
+  BRAVE_API_KEY?: string;
 }
