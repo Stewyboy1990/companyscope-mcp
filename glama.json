@@ -1,33 +1,4 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": ["Stewyboy1990"],
-  "name": "CompanyScope",
-  "description": "Company intelligence MCP server — one tool call returns a full company profile from 8 free data sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, web scraping, Brave News, Hunter.io.",
-  "tags": ["company", "intelligence", "research", "lead-enrichment", "sales-prospecting", "sec-edgar", "financials", "web-scraping", "mcp-server"],
-  "tools": [
-    {
-      "name": "lookup_company",
-      "description": "Get a comprehensive company profile from a domain or company name"
-    },
-    {
-      "name": "get_tech_stack",
-      "description": "Detect the technology stack a company uses"
-    },
-    {
-      "name": "get_key_people",
-      "description": "Find key people at a company with titles"
-    },
-    {
-      "name": "get_company_news",
-      "description": "Get recent news articles about a company"
-    },
-    {
-      "name": "get_corporate_registry",
-      "description": "Corporate registry data — incorporation, jurisdiction, officers"
-    },
-    {
-      "name": "get_financials",
-      "description": "SEC EDGAR financial data — revenue, net income, assets, stock tickers, filings"
-    }
-  ]
+  "maintainers": ["Stewyboy1990"]
 }
