@@ -1,17 +1,20 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Stewyboy1990/companyscope-mcp",
-  "description": "Company intelligence MCP server — one tool call returns a full company profile from 8 free data sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, web scraping, Brave News, Hunter.io.",
+  "description": "Company intelligence MCP server — full company profiles from one tool call. 8 free data sources.",
   "repository": {
     "url": "https://github.com/Stewyboy1990/companyscope-mcp",
     "source": "github"
   },
-  "version": "1.1.0",
+  "version": "1.2.1",
   "packages": [
     {
-      "registry_name": "npm",
-      "name": "companyscope-mcp",
-      "version": "1.0.0"
+      "registryType": "npm",
+      "identifier": "companyscope-mcp",
+      "version": "1.2.1",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ],
   "remotes": [
