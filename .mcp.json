@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "companyscope-mcp": {
+      "command": "npx",
+      "args": ["-y", "companyscope-mcp"]
+    }
+  }
+}
