@@ -321,6 +321,46 @@ export default {
       );
     }
 
+    // llms.txt — AI-readable site description
+    if (url.pathname === "/llms.txt") {
+      return new Response(
+        `# CompanyScope MCP Server
+
+> Company intelligence aggregator — one MCP tool call returns a full company profile.
+
+CompanyScope is an MCP (Model Context Protocol) server that aggregates company data from 8 free public sources into a single unified profile. No API keys required for basic usage.
+
+## Tools
+
+- lookup_company: Get a comprehensive company profile (founding info, description, tech stack, key people, news, social profiles)
+- get_tech_stack: Detect technologies, frameworks, and infrastructure from a company's web presence
+- get_key_people: Find founders, executives, and key personnel
+- get_company_news: Get recent news articles about a company
+- get_corporate_registry: Look up official corporate registration data (jurisdiction, status, officers)
+- get_financials: Get SEC financial data for US public companies (revenue, assets, filings)
+
+## Data Sources
+
+Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave News, Hunter.io, Web Scraping
+
+## Connect
+
+- MCP endpoint: ${url.origin}/mcp
+- npm: npx companyscope-mcp
+- GitHub: https://github.com/Stewyboy1990/companyscope-mcp
+
+## Links
+
+- [API Documentation](${url.origin}/.well-known/mcp.json)
+- [GitHub Repository](https://github.com/Stewyboy1990/companyscope-mcp)
+- [npm Package](https://www.npmjs.com/package/companyscope-mcp)
+`,
+        {
+          headers: { "Content-Type": "text/plain; charset=utf-8", ...CORS_HEADERS },
+        }
+      );
+    }
+
     // Landing page
     if (url.pathname === "/") {
       const accept = request.headers.get("accept") || "";

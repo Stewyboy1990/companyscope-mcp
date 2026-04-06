@@ -3,6 +3,7 @@
 [![Stewyboy1990/companyscope-mcp MCP server](https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp)
 [![npm](https://img.shields.io/npm/v/companyscope-mcp)](https://www.npmjs.com/package/companyscope-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDIgMC04LTMuNTgtOC04czMuNTgtOCA4LTggOCAzLjU4IDggOC0zLjU4IDgtOCA4eiIvPjwvc3ZnPg==)](cursor://anysphere.cursor-deeplink/mcp/install?name=companyscope&config=eyJtY3BTZXJ2ZXJzIjp7ImNvbXBhbnlzY29wZSI6eyJ1cmwiOiJodHRwczovL2NvbXBhbnlzY29wZS1tY3Auc3Rld3dpbGxpLndvcmtlcnMuZGV2L21jcCJ9fX0=)
 
 Company intelligence in one tool call. Get comprehensive company profiles, tech stacks, key people, news, and corporate data from any domain or company name.
 
