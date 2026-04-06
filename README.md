@@ -1,5 +1,9 @@
 # CompanyScope MCP Server
 
+[![Stewyboy1990/companyscope-mcp MCP server](https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp/badges/score.svg)](https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp)
+[![npm](https://img.shields.io/npm/v/companyscope-mcp)](https://www.npmjs.com/package/companyscope-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Company intelligence in one tool call. Get comprehensive company profiles, tech stacks, key people, news, and corporate data from any domain or company name.
 
 **Live endpoint:** `https://companyscope-mcp.stewwilli.workers.dev/mcp`
@@ -17,19 +21,20 @@ Company intelligence in one tool call. Get comprehensive company profiles, tech 
 
 ## Quick Start
 
-### npm (recommended)
+### Use the hosted server (recommended)
 
-```bash
-npx companyscope-mcp
-```
+Connect directly to the remote MCP endpoint — no installation required:
 
-**Claude Desktop / Cursor / Cline** (`claude_desktop_config.json`):
+**Claude Desktop** (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "companyscope": {
       "command": "npx",
-      "args": ["companyscope-mcp"]
+      "args": [
+        "mcp-remote",
+        "https://companyscope-mcp.stewwilli.workers.dev/mcp"
+      ]
     }
   }
 }
@@ -37,20 +42,13 @@ npx companyscope-mcp
 
 **Claude Code:**
 ```bash
-claude mcp add companyscope -- npx companyscope-mcp
-```
-
-### Docker
-
-```bash
-docker build -t companyscope-mcp .
-docker run -i companyscope-mcp
-```
-
-### Remote endpoint (no install)
-
-```bash
 claude mcp add companyscope --transport http https://companyscope-mcp.stewwilli.workers.dev/mcp
+```
+
+**Cursor / any MCP client:**
+```
+Endpoint: https://companyscope-mcp.stewwilli.workers.dev/mcp
+Transport: Streamable HTTP
 ```
 
 ### Self-host on Cloudflare Workers
@@ -59,6 +57,7 @@ claude mcp add companyscope --transport http https://companyscope-mcp.stewwilli.
 git clone https://github.com/Stewyboy1990/companyscope-mcp.git
 cd companyscope-mcp
 npm install
+# Create KV namespace
 wrangler kv namespace create CACHE
 # Update wrangler.toml with your KV namespace ID
 npm run deploy
