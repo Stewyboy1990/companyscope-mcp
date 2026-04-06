@@ -1,9 +1,33 @@
 {
   "name": "companyscope-mcp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Company intelligence MCP server — get a full company profile from one tool call. 8 data sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, web scraping, RDAP, Hunter.io, Brave News.",
   "type": "module",
   "license": "MIT",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "company-intelligence",
+    "company-data",
+    "lead-enrichment",
+    "sales-prospecting",
+    "business-intelligence",
+    "sec-edgar",
+    "tech-stack",
+    "company-profile",
+    "ai-agent",
+    "claude",
+    "cursor",
+    "b2b-research",
+    "competitive-intelligence",
+    "company-research"
+  ],
+  "homepage": "https://github.com/Stewyboy1990/companyscope-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Stewyboy1990/companyscope-mcp.git"
+  },
   "bin": {
     "companyscope-mcp": "./bin/cli.js"
   },
