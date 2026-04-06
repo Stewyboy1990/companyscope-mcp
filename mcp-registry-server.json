@@ -1,0 +1,16 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.stewyboy1990/companyscope",
+  "description": "11 company intelligence tools: profiles, competitors, patents, job postings, domain intel, social presence, financials, tech stack, key people from 10 free sources",
+  "repository": {
+    "url": "https://github.com/Stewyboy1990/companyscope-mcp",
+    "source": "github"
+  },
+  "version": "0.3.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://companyscope-mcp.stewwilli.workers.dev/mcp"
+    }
+  ]
+}
