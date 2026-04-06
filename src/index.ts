@@ -11,6 +11,11 @@ import {
 import { fetchCompanyNews } from "./sources/news.js";
 import { searchOpenCorporates } from "./sources/opencorporates.js";
 import { fetchSECData } from "./sources/sec-edgar.js";
+import { findCompetitors } from "./sources/competitors.js";
+import { fetchPatents } from "./sources/patents.js";
+import { fetchDomainIntel } from "./sources/domain-intel.js";
+import { fetchJobPostings } from "./sources/jobs.js";
+import { fetchSocialPresence } from "./sources/social.js";
 import { checkRateLimit } from "./cache.js";
 
 const LANDING_HTML = `<!DOCTYPE html>
@@ -56,8 +61,8 @@ footer{text-align:center;padding:2rem;color:#999;font-size:.85rem}
 </div>
 <div class="container">
   <div class="stats">
-    <div class="stat"><div class="num">8</div><div class="label">Data Sources</div></div>
-    <div class="stat"><div class="num">6</div><div class="label">MCP Tools</div></div>
+    <div class="stat"><div class="num">10</div><div class="label">Data Sources</div></div>
+    <div class="stat"><div class="num">11</div><div class="label">MCP Tools</div></div>
     <div class="stat"><div class="num">25</div><div class="label">Free Calls/Day</div></div>
     <div class="stat"><div class="num">0</div><div class="label">API Keys Needed</div></div>
   </div>
@@ -71,6 +76,11 @@ footer{text-align:center;padding:2rem;color:#999;font-size:.85rem}
       <div class="tool"><code>get_company_news</code><p>Recent news articles (requires NewsAPI key on server)</p></div>
       <div class="tool"><code>get_corporate_registry</code><p>Corporate registry: incorporation, jurisdiction, officers (140+ countries)</p></div>
       <div class="tool"><code>get_financials</code><p>SEC EDGAR: revenue, net income, assets, stock tickers, recent filings (US public companies)</p></div>
+      <div class="tool"><code>get_competitors</code><p>Find competitors and alternatives via web search analysis</p></div>
+      <div class="tool"><code>get_patents</code><p>USPTO patent search: 8M+ US patents by company assignee (2020+)</p></div>
+      <div class="tool"><code>get_domain_intel</code><p>Full domain analysis: DNS, WHOIS, hosting, email provider, nameservers</p></div>
+      <div class="tool"><code>get_job_postings</code><p>Open positions from careers pages — hiring signals and growth indicators</p></div>
+      <div class="tool"><code>get_social_presence</code><p>Social media mapping across 12 platforms + GitHub org stats</p></div>
     </div>
   </div>
 
@@ -82,9 +92,11 @@ footer{text-align:center;padding:2rem;color:#999;font-size:.85rem}
       <span class="src">Web Scraping</span>
       <span class="src">OpenCorporates</span>
       <span class="src">Hunter.io</span>
-      <span class="src">NewsAPI</span>
+      <span class="src">Brave Search</span>
       <span class="src">SEC EDGAR</span>
       <span class="src">RDAP (Domain)</span>
+      <span class="src">USPTO Patents</span>
+      <span class="src">DNS-over-HTTPS</span>
     </div>
     <p style="margin-top:.75rem;font-size:.9rem;color:#555">All free-tier APIs. No API keys needed to get started &mdash; Wikipedia, GitHub, SEC EDGAR, and web scraping provide rich profiles out of the box.</p>
   </div>
@@ -264,6 +276,103 @@ function registerTools(server: McpServer, env: Env) {
       };
     }
   );
+
+  // Tool 7: Competitor discovery
+  server.tool(
+    "get_competitors",
+    "Find competitors and alternatives for a company using web search. Returns a list of competing companies with names, URLs, and descriptions. Requires the server to have a Brave Search API key configured. Use company name for best results.",
+    { company_name: z.string().describe("Company name (e.g. 'Stripe', 'Notion', 'Datadog'). Use the common brand name, not the legal entity name.") },
+    async ({ company_name }) => {
+      const competitors = await findCompetitors(company_name, env.BRAVE_API_KEY);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: competitors.length > 0
+              ? JSON.stringify({ company: company_name, competitors }, null, 2)
+              : `No competitors found for "${company_name}". This may be because no Brave Search API key is configured on the server.`,
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool 8: Patent search
+  server.tool(
+    "get_patents",
+    "Search US patents assigned to a company via the USPTO PatentsView API. Returns patent numbers, titles, dates, abstracts, and inventors. Free, no API key needed. Covers 8M+ US patents. Only returns patents from 2020 onwards. Works best with the company's legal name as it appears on patent filings.",
+    { company_name: z.string().describe("Company name as it appears on patent filings (e.g. 'Apple Inc.', 'Google LLC', 'Microsoft Corporation'). Legal names with suffixes produce better results.") },
+    async ({ company_name }) => {
+      const patents = await fetchPatents(company_name, env.BRAVE_API_KEY);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: patents
+              ? JSON.stringify(patents, null, 2)
+              : `No patents found for "${company_name}" in USPTO database. Try the full legal name (e.g. 'Apple Inc.' instead of 'Apple').`,
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool 9: Domain intelligence
+  server.tool(
+    "get_domain_intel",
+    "Full domain analysis: DNS records (A, AAAA, MX, NS, TXT, CNAME), WHOIS/RDAP registration data, inferred hosting provider and email service. No API keys needed. Use this when you need infrastructure-level intelligence about a company — who hosts them, what email provider they use, when the domain was registered, and what DNS configuration they have.",
+    { domain: z.string().describe("Domain name without protocol (e.g. 'stripe.com', 'anthropic.com'). Must be a valid domain.") },
+    async ({ domain }) => {
+      const cleanDomain = normalizeDomain(domain);
+      const intel = await fetchDomainIntel(cleanDomain);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(intel, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool 10: Job postings
+  server.tool(
+    "get_job_postings",
+    "Discover open job positions at a company by scraping their careers/jobs pages. Returns job titles, departments, locations, and links. Also detects external job board usage (Lever, Greenhouse, Ashby). Hiring activity is a strong signal of company growth and priorities. No API keys needed.",
+    { domain: z.string().describe("Company website domain (e.g. 'anthropic.com', 'stripe.com'). The tool will try /careers, /jobs, and other common paths.") },
+    async ({ domain }) => {
+      const cleanDomain = normalizeDomain(domain);
+      const jobs = await fetchJobPostings(cleanDomain);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(jobs, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool 11: Social presence
+  server.tool(
+    "get_social_presence",
+    "Map a company's social media presence across 12 platforms (LinkedIn, Twitter/X, Facebook, Instagram, YouTube, TikTok, Reddit, Discord, Slack, Mastodon, Bluesky, Crunchbase) plus GitHub organization stats (repos, stars, languages, followers). No API keys needed. Use this to understand a company's community engagement and developer relations.",
+    { domain: z.string().describe("Company website domain (e.g. 'vercel.com', 'linear.app'). Social links are scraped from the company's homepage.") },
+    async ({ domain }) => {
+      const cleanDomain = normalizeDomain(domain);
+      const social = await fetchSocialPresence(cleanDomain, env.GITHUB_TOKEN);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(social, null, 2),
+          },
+        ],
+      };
+    }
+  );
 }
 
 // CORS headers for cross-origin MCP clients
@@ -338,10 +447,15 @@ CompanyScope is an MCP (Model Context Protocol) server that aggregates company d
 - get_company_news: Get recent news articles about a company
 - get_corporate_registry: Look up official corporate registration data (jurisdiction, status, officers)
 - get_financials: Get SEC financial data for US public companies (revenue, assets, filings)
+- get_competitors: Find competitors and alternatives via web search
+- get_patents: Search USPTO patents by company assignee (8M+ US patents)
+- get_domain_intel: Full domain analysis — DNS, WHOIS, hosting, email provider
+- get_job_postings: Discover open positions from company careers pages
+- get_social_presence: Map social media presence across 12 platforms + GitHub stats
 
 ## Data Sources
 
-Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave News, Hunter.io, Web Scraping
+Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, Web Scraping, USPTO PatentsView, DNS-over-HTTPS
 
 ## Connect
 

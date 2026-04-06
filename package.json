@@ -1,56 +1,54 @@
 {
   "name": "companyscope-mcp",
-  "version": "1.2.1",
-  "description": "Company intelligence MCP server — get a full company profile from one tool call. 8 data sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, web scraping, RDAP, Hunter.io, Brave News.",
-  "type": "module",
-  "license": "MIT",
+  "version": "1.3.0",
+  "description": "Company intelligence MCP server — 11 tools, 10 data sources. Profiles, tech stacks, patents, competitors, job postings, domain intel, social presence, financials. Wikipedia, GitHub, SEC EDGAR, USPTO, DNS, Brave Search.",
+  "mcpName": "CompanyScope",
   "keywords": [
     "mcp",
     "mcp-server",
     "model-context-protocol",
     "company-intelligence",
-    "company-data",
+    "company-research",
     "lead-enrichment",
     "sales-prospecting",
-    "business-intelligence",
     "sec-edgar",
     "tech-stack",
     "company-profile",
     "ai-agent",
     "claude",
     "cursor",
-    "b2b-research",
-    "competitive-intelligence",
-    "company-research"
+    "business-intelligence",
+    "web-scraping",
+    "patents",
+    "competitors",
+    "domain-intel",
+    "job-postings",
+    "social-media"
   ],
-  "mcpName": "io.github.Stewyboy1990/companyscope-mcp",
   "homepage": "https://github.com/Stewyboy1990/companyscope-mcp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Stewyboy1990/companyscope-mcp.git"
+    "url": "https://github.com/Stewyboy1990/companyscope-mcp"
   },
+  "type": "module",
+  "license": "MIT",
+  "author": "Stewyboy1990",
   "bin": {
     "companyscope-mcp": "./bin/cli.js"
   },
-  "scripts": {
-    "start": "node bin/cli.js",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "typecheck": "tsc --noEmit"
+  "main": "./src/server.js",
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE",
+    "Dockerfile"
+  ],
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
-    "agents": "^0.0.74",
-    "cheerio": "^1.0.0",
-    "hono": "^4.7.10",
     "zod": "^3.24.0"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250404.0",
-    "typescript": "^5.8.3",
-    "wrangler": "^4.14.1"
-  },
-  "engines": {
-    "node": ">=18"
   }
 }
