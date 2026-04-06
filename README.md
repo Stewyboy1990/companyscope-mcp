@@ -17,20 +17,19 @@ Company intelligence in one tool call. Get comprehensive company profiles, tech 
 
 ## Quick Start
 
-### Use the hosted server (recommended)
+### npm (recommended)
 
-Connect directly to the remote MCP endpoint — no installation required:
+```bash
+npx companyscope-mcp
+```
 
-**Claude Desktop** (`claude_desktop_config.json`):
+**Claude Desktop / Cursor / Cline** (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "companyscope": {
       "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://companyscope-mcp.stewwilli.workers.dev/mcp"
-      ]
+      "args": ["companyscope-mcp"]
     }
   }
 }
@@ -38,13 +37,20 @@ Connect directly to the remote MCP endpoint — no installation required:
 
 **Claude Code:**
 ```bash
-claude mcp add companyscope --transport http https://companyscope-mcp.stewwilli.workers.dev/mcp
+claude mcp add companyscope -- npx companyscope-mcp
 ```
 
-**Cursor / any MCP client:**
+### Docker
+
+```bash
+docker build -t companyscope-mcp .
+docker run -i companyscope-mcp
 ```
-Endpoint: https://companyscope-mcp.stewwilli.workers.dev/mcp
-Transport: Streamable HTTP
+
+### Remote endpoint (no install)
+
+```bash
+claude mcp add companyscope --transport http https://companyscope-mcp.stewwilli.workers.dev/mcp
 ```
 
 ### Self-host on Cloudflare Workers
@@ -53,7 +59,6 @@ Transport: Streamable HTTP
 git clone https://github.com/Stewyboy1990/companyscope-mcp.git
 cd companyscope-mcp
 npm install
-# Create KV namespace
 wrangler kv namespace create CACHE
 # Update wrangler.toml with your KV namespace ID
 npm run deploy

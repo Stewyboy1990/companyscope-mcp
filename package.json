@@ -1,9 +1,14 @@
 {
   "name": "companyscope-mcp",
-  "version": "0.1.0",
-  "description": "CompanyScope MCP Server — Company intelligence in one tool call",
-  "private": true,
+  "version": "1.1.0",
+  "description": "Company intelligence MCP server — get a full company profile from one tool call. 8 data sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, web scraping, RDAP, Hunter.io, Brave News.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "companyscope-mcp": "./bin/cli.js"
+  },
   "scripts": {
+    "start": "node bin/cli.js",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit"
@@ -12,11 +17,15 @@
     "@modelcontextprotocol/sdk": "^1.12.1",
     "agents": "^0.0.74",
     "cheerio": "^1.0.0",
-    "hono": "^4.7.10"
+    "hono": "^4.7.10",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250404.0",
     "typescript": "^5.8.3",
     "wrangler": "^4.14.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

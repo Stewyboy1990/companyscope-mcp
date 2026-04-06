@@ -1,13 +1,13 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "name": "CompanyScope",
-  "description": "Company intelligence aggregator — one MCP tool call returns a full company profile with founding info, tech stack, key people, financials, news, and corporate data from 7 free public data sources including Wikipedia, GitHub, SEC EDGAR, and web scraping.",
+  "description": "Company intelligence aggregator — one MCP tool call returns a full company profile with founding info, tech stack, key people, financials, news, and corporate data from 8 free public data sources including Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, and web scraping.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Stewyboy1990/companyscope-mcp"
   },
   "maintainers": ["Stewyboy1990"],
-  "tags": ["company", "intelligence", "research", "web-scraping", "github", "wikipedia", "sec-edgar", "financials", "business"],
+  "tags": ["company", "intelligence", "research", "web-scraping", "github", "wikipedia", "sec-edgar", "financials", "business", "lead-enrichment", "mcp-server"],
   "tools": [
     {
       "name": "lookup_company",
@@ -26,16 +26,26 @@
       "description": "Get recent news articles about a company"
     },
     {
-      "name": "get_funding_history",
-      "description": "Look up corporate registry information"
+      "name": "get_corporate_registry",
+      "description": "Look up corporate registry information from 140+ jurisdictions"
     },
     {
       "name": "get_financials",
-      "description": "Get SEC EDGAR financial data — revenue, net income, assets, stock tickers, filings for US public companies"
+      "description": "Get SEC EDGAR financial data — revenue, net income, assets, stock tickers, filings"
     }
   ],
-  "transport": {
-    "type": "streamable-http",
-    "url": "https://companyscope-mcp.stewwilli.workers.dev/mcp"
-  }
+  "install": {
+    "npm": "npx companyscope-mcp"
+  },
+  "transport": [
+    {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["companyscope-mcp"]
+    },
+    {
+      "type": "streamable-http",
+      "url": "https://companyscope-mcp.stewwilli.workers.dev/mcp"
+    }
+  ]
 }
