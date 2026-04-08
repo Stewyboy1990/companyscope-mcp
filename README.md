@@ -6,7 +6,7 @@
 [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDIgMC04LTMuNTgtOC04czMuNTgtOCA4LTggOCAzLjU4IDggOC0zLjU4IDgtOCA4eiIvPjwvc3ZnPg==)](cursor://anysphere.cursor-deeplink/mcp/install?name=companyscope&config=eyJtY3BTZXJ2ZXJzIjp7ImNvbXBhbnlzY29wZSI6eyJ1cmwiOiJodHRwczovL2NvbXBhbnlzY29wZS1tY3Auc3Rld3dpbGxpLndvcmtlcnMuZGV2L21jcCJ9fX0=)
 [![Apify Actor](https://img.shields.io/badge/Apify-Actor-blue?logo=apify)](https://apify.com/constructive_wainscot/companyscope-mcp)
 
-Company intelligence in one tool call. Get comprehensive company profiles — financials, tech stacks, competitors, patents, key people, job postings, domain intel, social presence, and news — from any domain or company name. Aggregates **10 free public data sources** in parallel.
+Company intelligence in one tool call. Get comprehensive company profiles — financials, tech stacks, competitors, patents, key people, job postings, domain intel, social presence, and news — from any domain or company name. Aggregates **12 free public data sources** in parallel.
 
 > **Want cloud-hosted, always-on access with all 11 tools?** Use the [Apify Actor](https://apify.com/constructive_wainscot/companyscope-mcp) — pay only for what you use, no infrastructure to manage.
 
@@ -55,7 +55,7 @@ claude mcp add companyscope --transport http \
 }
 ```
 
-### Option 2: Free hosted server (6 core tools, 25 calls/day)
+### Option 2: Free hosted server (all 11 tools, 25 calls/day)
 
 Connect to the free Cloudflare Workers endpoint:
 
@@ -94,7 +94,7 @@ npm run deploy
 
 ## Data Sources
 
-All data is aggregated from **10 free public sources** — no paid API keys required:
+All data is aggregated from **12 free public sources** — no paid API keys required:
 
 | Source | Data Provided |
 |--------|--------------|
@@ -120,16 +120,18 @@ Returns a structured profile with:
 - Founded date, headquarters, employee count
 - Tech stack (from website + GitHub)
 - Key people (from corporate registry, website, Wikipedia)
-- Recent news
+- Recent news, competitors, patent portfolio
+- Hiring signal (active/some/none) with job titles
+- Domain infrastructure (hosting, email provider, DNS)
 - Social profiles
-- Confidence score (0-1 based on data sources that returned data)
+- Confidence score (0-1 based on 12 data sources)
 
 ## Pricing
 
 | Option | Tools | Calls/Day | Price |
 |--------|-------|-----------|-------|
-| Free (Cloudflare) | 6 core | 25 | $0 |
-| Free (npm) | 6 core | Unlimited | $0 |
+| Free (Cloudflare) | All 11 | 25 | $0 |
+| Free (npm) | All 11 | Unlimited | $0 |
 | [Apify Actor](https://apify.com/constructive_wainscot/companyscope-mcp) | **All 11** | Unlimited | Pay-per-use |
 
 ## Use Cases
