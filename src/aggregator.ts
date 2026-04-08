@@ -11,6 +11,10 @@ import { searchOpenCorporates } from "./sources/opencorporates.js";
 import { fetchWikipediaData } from "./sources/wikipedia.js";
 import { fetchSECData } from "./sources/sec-edgar.js";
 import { fetchRDAPData } from "./sources/rdap.js";
+import { findCompetitors } from "./sources/competitors.js";
+import { fetchPatents } from "./sources/patents.js";
+import { fetchDomainIntel } from "./sources/domain-intel.js";
+import { fetchJobPostings } from "./sources/jobs.js";
 import { getCachedProfile, cacheProfile, getCachedJSON, setCachedJSON } from "./cache.js";
 
 /**
@@ -60,17 +64,33 @@ export async function buildCompanyProfile(
   const companyNameGuess = domain.split(".")[0];
 
   // Fire all data sources in parallel
-  const [webData, ghData, hunterData, newsData, corpData, wikiData, secData, rdapData] =
-    await Promise.allSettled([
-      scrapeCompanyWebsite(domain),
-      fetchGitHubProfile(domain, env.GITHUB_TOKEN),
-      fetchHunterData(domain, env.HUNTER_API_KEY),
-      fetchCompanyNews(companyNameGuess, env.NEWS_API_KEY, env.BRAVE_API_KEY),
-      searchOpenCorporates(companyNameGuess, env.OPENCORPORATES_TOKEN),
-      fetchWikipediaData(companyNameGuess),
-      fetchSECData(companyNameGuess),
-      fetchRDAPData(domain),
-    ]);
+  const [
+    webData,
+    ghData,
+    hunterData,
+    newsData,
+    corpData,
+    wikiData,
+    secData,
+    rdapData,
+    competitorsData,
+    patentsData,
+    domainIntelData,
+    jobsData,
+  ] = await Promise.allSettled([
+    scrapeCompanyWebsite(domain),
+    fetchGitHubProfile(domain, env.GITHUB_TOKEN),
+    fetchHunterData(domain, env.HUNTER_API_KEY),
+    fetchCompanyNews(companyNameGuess, env.NEWS_API_KEY, env.BRAVE_API_KEY),
+    searchOpenCorporates(companyNameGuess, env.OPENCORPORATES_TOKEN),
+    fetchWikipediaData(companyNameGuess),
+    fetchSECData(companyNameGuess),
+    fetchRDAPData(domain),
+    findCompetitors(companyNameGuess, env.BRAVE_API_KEY),
+    fetchPatents(companyNameGuess, env.BRAVE_API_KEY),
+    fetchDomainIntel(domain),
+    fetchJobPostings(domain),
+  ]);
 
   const web = webData.status === "fulfilled" ? webData.value : {};
   const gh = ghData.status === "fulfilled" ? ghData.value : null;
@@ -80,6 +100,13 @@ export async function buildCompanyProfile(
   const wiki = wikiData.status === "fulfilled" ? wikiData.value : null;
   let sec = secData.status === "fulfilled" ? secData.value : null;
   const rdap = rdapData.status === "fulfilled" ? rdapData.value : null;
+  const competitorsList =
+    competitorsData.status === "fulfilled" ? competitorsData.value : [];
+  const patentsResult =
+    patentsData.status === "fulfilled" ? patentsData.value : null;
+  const domainIntel =
+    domainIntelData.status === "fulfilled" ? domainIntelData.value : null;
+  const jobs = jobsData.status === "fulfilled" ? jobsData.value : null;
 
   // Sanity check: if SEC entity name doesn't closely match the query, discard it
   // to prevent cross-contamination (e.g., "stripe" matching "AT&T" via short ticker,
@@ -168,7 +195,7 @@ export async function buildCompanyProfile(
   // Calculate sources and confidence
   const sources: string[] = [...(web.sources || [])];
   let dataPoints = 0;
-  const maxPoints = 8; // web, github, hunter, news, corp, wiki, sec, rdap
+  const maxPoints = 12; // web, github, hunter, news, corp, wiki, sec, rdap, competitors, patents, domain-intel, jobs
 
   if (web.name) dataPoints++;
   if (gh) {
@@ -200,6 +227,22 @@ export async function buildCompanyProfile(
     dataPoints++;
     sources.push("rdap.org");
   }
+  if (competitorsList.length > 0) {
+    dataPoints++;
+    sources.push("brave_search:competitors");
+  }
+  if (patentsResult && patentsResult.totalFound > 0) {
+    dataPoints++;
+    sources.push("patents.google.com");
+  }
+  if (domainIntel && (domainIntel.aRecords.length > 0 || domainIntel.inferredHosting)) {
+    dataPoints++;
+    sources.push("cloudflare-dns.com");
+  }
+  if (jobs && jobs.totalFound > 0) {
+    dataPoints++;
+    sources.push(jobs.careersUrl || `https://${domain}/careers`);
+  }
 
   const profile: CompanyProfile = {
     domain,
@@ -222,7 +265,7 @@ export async function buildCompanyProfile(
     recentNews: news,
     keyPeople: allPeople.slice(0, 15),
     fundingHistory: [],
-    competitors: [],
+    competitors: competitorsList.slice(0, 10).map((c) => c.name),
     stockTickers: sec?.tickers || [],
     exchanges: sec?.exchanges || [],
     financials: sec?.financials || null,
@@ -235,6 +278,35 @@ export async function buildCompanyProfile(
           expirationDate: rdap.expirationDate,
           domainAge: rdap.domainAge,
           nameservers: rdap.nameservers,
+        }
+      : null,
+    domainIntel: domainIntel
+      ? {
+          inferredHosting: domainIntel.inferredHosting,
+          inferredEmailProvider: domainIntel.inferredEmailProvider,
+          aRecords: domainIntel.aRecords,
+          mxRecords: domainIntel.mxRecords,
+        }
+      : null,
+    patents:
+      patentsResult && patentsResult.totalFound > 0
+        ? {
+            totalFound: patentsResult.totalFound,
+            topPatents: patentsResult.patents.slice(0, 5).map((p) => ({
+              title: p.title,
+              patentId: p.patentId,
+              url: p.url,
+              date: p.date,
+            })),
+            googlePatentsUrl: patentsResult.googlePatentsUrl,
+          }
+        : null,
+    hiring: jobs
+      ? {
+          signal: jobs.hiringSignal,
+          totalFound: jobs.totalFound,
+          topTitles: jobs.jobs.slice(0, 10).map((j) => j.title),
+          careersUrl: jobs.careersUrl,
         }
       : null,
     confidence: dataPoints / maxPoints,

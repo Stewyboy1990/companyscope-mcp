@@ -163,7 +163,7 @@ function registerTools(server: McpServer, env: Env) {
   // Tool 1: Full company profile
   server.tool(
     "lookup_company",
-    "Get a comprehensive company profile by aggregating data from Wikipedia, GitHub, SEC EDGAR, OpenCorporates, and web scraping. Returns founding year, description, headquarters, employee count, industry, tech stack, key people, and recent news. Use this as the primary entry point for any company research — it calls all other data sources automatically. Input can be a domain (stripe.com) or company name (Stripe). Returns a JSON object with confidence scores and source attribution.",
+    "Get a comprehensive company profile by aggregating data from 12 sources in parallel: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, Hunter.io, NewsAPI, Brave News, RDAP, DNS, web scraping, USPTO patents, Brave competitor search, and careers page scraping. Returns founding year, description, headquarters, employee count, industry, tech stack, key people, recent news, competitors, patent summary, hiring signal (active/some/none), and domain infrastructure (hosting, email provider, DNS). Use this as the primary entry point for any company research — it calls all other data sources automatically. Input can be a domain (stripe.com) or company name (Stripe). Returns a JSON object with confidence scores and source attribution.",
     { query: z.string().describe("Company domain (e.g. 'stripe.com') or company name (e.g. 'Stripe'). Domains produce richer results because they enable website scraping and DNS analysis.") },
     async ({ query }) => {
       const profile = await buildCompanyProfile(query, env);

@@ -60,7 +60,7 @@ function createServer() {
   // Tool 1: Full company profile
   server.tool(
     "lookup_company",
-    "Get a comprehensive company profile by aggregating data from Wikipedia, GitHub, SEC EDGAR, OpenCorporates, and web scraping. Returns founding year, description, headquarters, employee count, industry, tech stack, key people, and recent news. Use this as the primary entry point for any company research — it calls all other data sources automatically. Input can be a domain (stripe.com) or company name (Stripe). Returns a JSON object with confidence scores and source attribution.",
+    "Get a comprehensive company profile by aggregating data from 12 sources in parallel: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, Hunter.io, NewsAPI, Brave News, RDAP, DNS, web scraping, USPTO patents, Brave competitor search, and careers page scraping. Returns founding year, description, headquarters, employee count, industry, tech stack, key people, recent news, competitors, patent summary, hiring signal (active/some/none), and domain infrastructure (hosting, email provider, DNS). Use this as the primary entry point for any company research — it calls all other data sources automatically. Input can be a domain (stripe.com) or company name (Stripe). Returns a JSON object with confidence scores and source attribution.",
     {
       query: z
         .string()
@@ -257,7 +257,15 @@ function createServer() {
 
 export { createServer };
 
+// Smithery sandbox scanning
+export function createSandboxServer() {
+  return createServer();
+}
+
 // Start if run directly
-const server = createServer();
-const transport = new StdioServerTransport();
-await server.connect(transport);
+async function main() {
+  const server = createServer();
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
+main();

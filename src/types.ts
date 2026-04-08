@@ -36,6 +36,23 @@ export interface CompanyProfile {
     domainAge: string | null;
     nameservers: string[];
   } | null;
+  domainIntel: {
+    inferredHosting: string | null;
+    inferredEmailProvider: string | null;
+    aRecords: string[];
+    mxRecords: { host: string; priority: number }[];
+  } | null;
+  patents: {
+    totalFound: number;
+    topPatents: { title: string; patentId: string | null; url: string; date: string | null }[];
+    googlePatentsUrl: string;
+  } | null;
+  hiring: {
+    signal: string; // "actively hiring" | "some openings" | "no openings found"
+    totalFound: number;
+    topTitles: string[];
+    careersUrl: string | null;
+  } | null;
   confidence: number; // 0-1, how much data we found
   sources: string[];
   fetchedAt: string;
