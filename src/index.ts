@@ -16,7 +16,7 @@ import { fetchPatents } from "./sources/patents.js";
 import { fetchDomainIntel } from "./sources/domain-intel.js";
 import { fetchJobPostings } from "./sources/jobs.js";
 import { fetchSocialPresence } from "./sources/social.js";
-import { checkRateLimit } from "./cache.js";
+import { checkRateLimit, trackUsage } from "./cache.js";
 
 const LANDING_HTML = `<!DOCTYPE html>
 <html lang="en">
@@ -61,7 +61,7 @@ footer{text-align:center;padding:2rem;color:#999;font-size:.85rem}
 </div>
 <div class="container">
   <div class="stats">
-    <div class="stat"><div class="num">10</div><div class="label">Data Sources</div></div>
+    <div class="stat"><div class="num">12</div><div class="label">Data Sources</div></div>
     <div class="stat"><div class="num">11</div><div class="label">MCP Tools</div></div>
     <div class="stat"><div class="num">25</div><div class="label">Free Calls/Day</div></div>
     <div class="stat"><div class="num">0</div><div class="label">API Keys Needed</div></div>
@@ -387,13 +387,50 @@ export default {
   async fetch(
     request: Request,
     env: Env,
-    _ctx: ExecutionContext
+    ctx: ExecutionContext
   ): Promise<Response> {
     const url = new URL(request.url);
 
     // Handle CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+
+    // Usage analytics endpoint
+    if (url.pathname === "/stats") {
+      const today = new Date().toISOString().split("T")[0];
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+      const tools = ["lookup_company", "get_tech_stack", "get_key_people", "get_company_news", "get_corporate_registry", "get_financials", "get_competitors", "get_patents", "get_domain_intel", "get_job_postings", "get_social_presence"];
+
+      const [callsToday, callsYesterday, usersToday, usersYesterday] = await Promise.all([
+        env.CACHE.get(`analytics:calls:${today}`),
+        env.CACHE.get(`analytics:calls:${yesterday}`),
+        env.CACHE.get(`analytics:users:${today}`),
+        env.CACHE.get(`analytics:users:${yesterday}`),
+      ]);
+
+      const toolStats: Record<string, number> = {};
+      for (const t of tools) {
+        const v = await env.CACHE.get(`analytics:tool:${t}:${today}`);
+        if (v) toolStats[t] = parseInt(v, 10);
+      }
+
+      return new Response(
+        JSON.stringify({
+          today: {
+            date: today,
+            calls: callsToday ? parseInt(callsToday, 10) : 0,
+            unique_users: usersToday ? usersToday.split(",").length : 0,
+            tools: toolStats,
+          },
+          yesterday: {
+            date: yesterday,
+            calls: callsYesterday ? parseInt(callsYesterday, 10) : 0,
+            unique_users: usersYesterday ? usersYesterday.split(",").length : 0,
+          },
+        }, null, 2),
+        { headers: { "Content-Type": "application/json", ...CORS_HEADERS } }
+      );
     }
 
     // Health check (JSON)
@@ -411,8 +448,8 @@ export default {
       );
     }
 
-    // MCP discovery (well-known)
-    if (url.pathname === "/.well-known/mcp.json") {
+    // MCP discovery — SEP-1960 manifest (/.well-known/mcp) and legacy (/.well-known/mcp.json)
+    if (url.pathname === "/.well-known/mcp.json" || url.pathname === "/.well-known/mcp") {
       return new Response(
         JSON.stringify({
           mcp_version: "2025-03-26",
@@ -425,7 +462,55 @@ export default {
           },
         }),
         {
-          headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+            ...CORS_HEADERS,
+          },
+        }
+      );
+    }
+
+    // MCP discovery — SEP-1649 Server Card (/.well-known/mcp/server-card.json)
+    if (url.pathname === "/.well-known/mcp/server-card.json") {
+      return new Response(
+        JSON.stringify({
+          "$schema": "https://modelcontextprotocol.io/schemas/server-card/v1.0",
+          version: "1.0",
+          protocolVersion: "2025-03-26",
+          serverInfo: {
+            name: "CompanyScope",
+            version: "1.3.4",
+            description: "Company intelligence MCP server — 11 tools, 12 data sources. Full company profile in one tool call: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, USPTO patents, Brave Search, RDAP, DNS, web scraping.",
+            homepage: "https://github.com/Stewyboy1990/companyscope-mcp",
+          },
+          transport: {
+            type: "streamable-http",
+            url: `${url.origin}/mcp`,
+          },
+          capabilities: { tools: true, resources: false, prompts: false },
+          tools: [
+            { name: "lookup_company", description: "Full company profile from 12 sources: Wikipedia, GitHub, SEC EDGAR, OpenCorporates, DNS, RDAP, Brave Search, web scraping, USPTO patents, competitors, jobs, social" },
+            { name: "get_tech_stack", description: "Detect frameworks, hosting, analytics, languages from website and GitHub" },
+            { name: "get_key_people", description: "Founders, executives, team members with titles from 4 sources" },
+            { name: "get_company_news", description: "Recent news articles about a company via Brave News Search" },
+            { name: "get_corporate_registry", description: "Corporate registry data: incorporation, jurisdiction, officers (140+ countries)" },
+            { name: "get_financials", description: "SEC EDGAR financial data for US public companies: revenue, net income, assets, filings" },
+            { name: "get_competitors", description: "Find competitors and alternatives via web search analysis" },
+            { name: "get_patents", description: "USPTO patent search: 8M+ US patents by company assignee (2020+)" },
+            { name: "get_domain_intel", description: "Full domain analysis: DNS records, WHOIS via RDAP, hosting, email provider" },
+            { name: "get_job_postings", description: "Discover open positions from company careers pages" },
+            { name: "get_social_presence", description: "Map social media presence across 12 platforms plus GitHub stats" },
+          ],
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=3600",
+            "X-Content-Type-Options": "nosniff",
+            ...CORS_HEADERS,
+          },
         }
       );
     }
@@ -437,7 +522,7 @@ export default {
 
 > Company intelligence aggregator — one MCP tool call returns a full company profile.
 
-CompanyScope is an MCP (Model Context Protocol) server that aggregates company data from 8 free public sources into a single unified profile. No API keys required for basic usage.
+CompanyScope is an MCP (Model Context Protocol) server that aggregates company data from 12 free public sources into a single unified profile. One tool call returns a full company dossier — perfect for lead enrichment, sales prospecting, competitive research, and due diligence. No API keys required for basic usage.
 
 ## Tools
 
@@ -455,7 +540,7 @@ CompanyScope is an MCP (Model Context Protocol) server that aggregates company d
 
 ## Data Sources
 
-Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, Web Scraping, USPTO PatentsView, DNS-over-HTTPS
+Wikipedia, Wikidata, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, BuiltWith (via scraping), Web Scraping, USPTO PatentsView, DNS-over-HTTPS
 
 ## Connect
 
@@ -468,6 +553,8 @@ Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, Web
 - [API Documentation](${url.origin}/.well-known/mcp.json)
 - [GitHub Repository](https://github.com/Stewyboy1990/companyscope-mcp)
 - [npm Package](https://www.npmjs.com/package/companyscope-mcp)
+- [Apify Store](https://apify.com/constructive_wainscot/companyscope-mcp)
+- [Glama](https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp)
 `,
         {
           headers: { "Content-Type": "text/plain; charset=utf-8", ...CORS_HEADERS },
@@ -501,10 +588,16 @@ Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, Web
       // Only rate-limit tool calls, not initialization or listing
       const bodyClone = request.clone();
       let isToolCall = false;
+      let toolName = "unknown";
       try {
         const body = await bodyClone.json() as Record<string, unknown>;
-        const method = Array.isArray(body) ? (body[0] as Record<string, unknown>)?.method : body?.method;
+        const entry = Array.isArray(body) ? (body[0] as Record<string, unknown>) : body;
+        const method = entry?.method as string | undefined;
         isToolCall = method === "tools/call";
+        if (isToolCall) {
+          const params = entry?.params as Record<string, unknown> | undefined;
+          toolName = (params?.name as string) || "unknown";
+        }
       } catch {}
 
       let rateCheck = { allowed: true, remaining: 25, resetAt: "" };
@@ -535,6 +628,9 @@ Wikipedia, GitHub, SEC EDGAR, OpenCorporates, RDAP, Brave Search, Hunter.io, Web
             }
           );
         }
+
+        // Track usage analytics (non-blocking)
+        ctx.waitUntil(trackUsage(env, identifier, toolName));
       }
 
       const server = createServer();

@@ -20,8 +20,8 @@ export async function findCompetitors(
 
   const competitors: Competitor[] = [];
   const seen = new Set<string>();
+  const lowerName = companyName.toLowerCase();
 
-  // Run two searches in parallel for better coverage
   const queries = [
     `${companyName} competitors`,
     `${companyName} alternatives`,
@@ -34,10 +34,13 @@ export async function findCompetitors(
   for (const result of results) {
     if (result.status !== "fulfilled") continue;
     for (const item of result.value) {
-      // Skip results that are about the company itself
       const lowerTitle = item.title.toLowerCase();
-      const lowerName = companyName.toLowerCase();
+      // Skip results about the company itself
       if (lowerTitle.startsWith(lowerName) && !lowerTitle.includes("vs")) continue;
+
+      const domain = extractDomain(item.url);
+      // Skip review/comparison aggregator sites — they aren't competitors
+      if (domain && isReviewSite(domain)) continue;
 
       // Extract competitor names from "X vs Y" patterns in titles
       const vsMatch = item.title.match(/(.+?)\s+vs\.?\s+(.+?)(?:\s*[-:|]|$)/i);
@@ -45,33 +48,42 @@ export async function findCompetitors(
         for (const name of [vsMatch[1].trim(), vsMatch[2].trim()]) {
           if (name.toLowerCase() !== lowerName && !seen.has(name.toLowerCase())) {
             seen.add(name.toLowerCase());
-            competitors.push({
-              name,
-              url: null,
-              description: null,
-              source: "brave_search",
-            });
+            competitors.push({ name, url: null, description: null, source: "brave_search" });
           }
         }
         continue;
       }
 
-      // Use the result itself as a potential competitor
-      const domain = extractDomain(item.url);
-      if (domain && !seen.has(domain)) {
+      if (!domain || seen.has(domain)) continue;
+
+      // Homepage results (short path) are likely actual competitor sites
+      if (isHomepage(item.url)) {
         seen.add(domain);
-        // Clean up the title — remove "- Company Name" suffixes
-        const cleanTitle = item.title.replace(/\s*[-|].*$/, "").trim();
-        // Skip list articles
-        if (/^\d+\s+(best|top)/i.test(cleanTitle)) continue;
-        if (cleanTitle.length > 0 && cleanTitle.length < 80) {
+        const brand = domainToBrand(domain);
+        if (brand.toLowerCase() !== lowerName) {
           competitors.push({
-            name: cleanTitle,
+            name: brand,
             url: item.url,
             description: item.description || null,
             source: "brave_search",
           });
         }
+        continue;
+      }
+
+      // Non-homepage results: skip if the title looks like an article
+      const cleanTitle = item.title.replace(/\s*[-|–—].*$/, "").trim();
+      if (isArticleTitle(cleanTitle)) continue;
+
+      // Only accept short, clean titles that look like brand names
+      if (cleanTitle.length > 0 && cleanTitle.length < 40 && !cleanTitle.includes("?")) {
+        seen.add(domain);
+        competitors.push({
+          name: cleanTitle,
+          url: item.url,
+          description: item.description || null,
+          source: "brave_search",
+        });
       }
     }
   }
@@ -116,4 +128,46 @@ function extractDomain(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+function isHomepage(url: string): boolean {
+  try {
+    const path = new URL(url).pathname.replace(/\/$/, "");
+    return path === "" || path === "/about" || path === "/pricing";
+  } catch {
+    return false;
+  }
+}
+
+function domainToBrand(domain: string): string {
+  const name = domain.split(".")[0];
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+const REVIEW_SITES = new Set([
+  "g2.com", "capterra.com", "trustradius.com", "getapp.com",
+  "softwareadvice.com", "sourceforge.net", "alternativeto.net",
+  "slant.co", "producthunt.com", "techradar.com", "pcmag.com",
+  "forbes.com", "businessinsider.com", "techcrunch.com",
+  "merchantmaverick.com", "nerdwallet.com", "investopedia.com",
+  "medium.com", "reddit.com", "quora.com", "wikipedia.org",
+  "youtube.com", "linkedin.com",
+]);
+
+function isReviewSite(domain: string): boolean {
+  if (REVIEW_SITES.has(domain)) return true;
+  for (const site of REVIEW_SITES) {
+    if (domain.endsWith("." + site)) return true;
+  }
+  return false;
+}
+
+function isArticleTitle(title: string): boolean {
+  return (
+    /^\d+\s+/i.test(title) ||
+    /\b(best|top|leading|ultimate|complete|definitive)\s+(alternatives?|competitors?|tools?|platforms?|solutions?|software|options?|picks?)/i.test(title) ||
+    /\b(alternatives?|competitors?)\s+(to|for|of|in)\b/i.test(title) ||
+    /\b(comparison|review|guide|roundup|list|ranked|compared)\b/i.test(title) ||
+    /\b(you\s+should|to\s+consider|to\s+try|worth\s+checking|you\s+need)\b/i.test(title)
+  );
 }

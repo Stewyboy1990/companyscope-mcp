@@ -101,3 +101,37 @@ export async function checkRateLimit(
     return { allowed: true, remaining: limit, resetAt: "" };
   }
 }
+
+/**
+ * Track usage analytics in KV.
+ * Increments daily call count, unique user count, and per-tool counters.
+ * Non-blocking — fire and forget.
+ */
+export async function trackUsage(
+  env: Env,
+  identifier: string,
+  toolName: string
+): Promise<void> {
+  const today = new Date().toISOString().split("T")[0];
+  const ttl = 60 * 60 * 24 * 30; // 30 days retention
+  try {
+    // Daily total calls
+    const callsKey = `analytics:calls:${today}`;
+    const calls = await env.CACHE.get(callsKey);
+    await env.CACHE.put(callsKey, String((calls ? parseInt(calls, 10) : 0) + 1), { expirationTtl: ttl });
+
+    // Daily unique users (store as comma-separated set)
+    const usersKey = `analytics:users:${today}`;
+    const usersRaw = await env.CACHE.get(usersKey) || "";
+    const usersSet = new Set(usersRaw ? usersRaw.split(",") : []);
+    usersSet.add(identifier);
+    await env.CACHE.put(usersKey, [...usersSet].join(","), { expirationTtl: ttl });
+
+    // Per-tool daily counter
+    const toolKey = `analytics:tool:${toolName}:${today}`;
+    const toolCalls = await env.CACHE.get(toolKey);
+    await env.CACHE.put(toolKey, String((toolCalls ? parseInt(toolCalls, 10) : 0) + 1), { expirationTtl: ttl });
+  } catch {
+    // Analytics failures are non-critical
+  }
+}

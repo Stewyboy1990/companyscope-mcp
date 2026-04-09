@@ -35,7 +35,8 @@ export async function fetchPatents(
   }
 
   try {
-    const query = `${companyName} patent site:patents.google.com`;
+    // Quote company name to avoid generic term matches (e.g., "stripe" → magnetic stripe)
+    const query = `"${companyName}" assignee patent site:patents.google.com`;
     const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=20`;
     const resp = await fetch(url, {
       headers: {
@@ -61,18 +62,21 @@ export async function fetchPatents(
 
     const results = data.web?.results || [];
     const patents: Patent[] = [];
+    const lowerName = companyName.toLowerCase();
 
     for (const r of results) {
-      // Only keep Google Patents results
       if (!r.url.includes("patents.google.com/patent/")) continue;
 
-      // Extract patent ID from URL
+      // Post-filter: require the company name to appear in the title or snippet
+      // to avoid false positives (e.g., "magnetic stripe" patents for Stripe Inc)
+      const textToCheck = `${r.title} ${r.description || ""}`.toLowerCase();
+      if (!textToCheck.includes(lowerName)) continue;
+
       const patentMatch = r.url.match(
         /patents\.google\.com\/patent\/([A-Z]{2}\d+)/
       );
       const patentId = patentMatch ? patentMatch[1] : null;
 
-      // Clean title — remove " - Google Patents" suffix
       const title = r.title
         .replace(/\s*[-–—]\s*Google Patents.*$/i, "")
         .trim();
