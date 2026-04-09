@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CompanyScope MCP Server - Company Intelligence for AI Agents | 11 Tools, 10 Data Sources</title>
-<meta name="description" content="Company intelligence MCP server with 11 tools and 10 free data sources. SEC financials, tech stacks, competitors, patents, key people, job postings, domain intel. Works with Claude, Cursor, Cline.">
+<meta name="description" content="Company intelligence MCP server with 11 tools and 10 free data sources. SEC financials, tech stacks, competitors, patents, key people, job postings, domain intel. Works with ChatGPT, Claude, Cursor, Cline.">
 <meta name="keywords" content="MCP server, company intelligence, company research, lead enrichment, sales prospecting, SEC EDGAR, tech stack detection, AI agent tools, Model Context Protocol, Claude Desktop, Cursor, Cline, competitors, patents, job postings, domain intel, social media, B2B research, competitive intelligence, company profile API, free company data, Apify">
 <meta property="og:title" content="CompanyScope MCP - Company Intelligence in One Tool Call">
 <meta property="og:description" content="11 MCP tools, 10 free data sources. SEC financials, tech stacks, competitors, patents, key people in one call. Free or pay-per-use on Apify.">
@@ -84,7 +84,7 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
   "mainEntity": [
     {"@type": "Question", "name": "How do I add CompanyScope to Claude Desktop?", "acceptedAnswer": {"@type": "Answer", "text": "Open your Claude Desktop config file (Settings > Developer > Edit Config) and add the MCP server connection. Use npx mcp-remote with the endpoint https://companyscope-mcp.stewwilli.workers.dev/mcp for free, or the Apify standby URL for all 11 tools."}},
     {"@type": "Question", "name": "What is the difference between free and Apify versions?", "acceptedAnswer": {"@type": "Answer", "text": "The free version includes 6 core tools with 25 calls/day. The Apify Actor version includes all 11 tools (adding competitors, patents, domain intel, job postings, social presence) with unlimited pay-per-use access."}},
-    {"@type": "Question", "name": "Does CompanyScope work with Cursor and Cline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint. This includes Claude Desktop, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol."}},
+    {"@type": "Question", "name": "Does CompanyScope work with ChatGPT, Cursor and Cline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint. This includes ChatGPT (Pro/Team/Enterprise), Claude Desktop, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol."}},
     {"@type": "Question", "name": "What data does CompanyScope return for non-US companies?", "acceptedAnswer": {"@type": "Answer", "text": "Wikipedia, GitHub, web scraping, RDAP, DNS, and OpenCorporates work globally across 140+ jurisdictions. SEC EDGAR data is only available for US public companies."}}
   ]
 }
@@ -93,7 +93,7 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
 <body>
 <div class="hero">
   <h1>CompanyScope MCP</h1>
-  <p>Company intelligence for AI agents. 11 tools, 10 free data sources. Full company profiles &mdash; SEC financials, competitors, patents, tech stacks, key people &mdash; in one tool call.</p>
+  <p>Company intelligence for AI agents. 11 tools, 10 free data sources. Full company profiles &mdash; SEC financials, competitors, patents, tech stacks, key people &mdash; in one tool call. Works with ChatGPT, Claude, Cursor, and more.</p>
   <span class="badge">Free tier available &mdash; No API keys needed</span>
   <br>
   <a class="cta" href="#connect" style="margin-top:1.5rem">Get Started Free</a>
@@ -190,7 +190,18 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
 
   <div class="card" id="connect">
     <h2>Connect in 30 Seconds</h2>
-    <p style="font-size:.9rem;color:#555;margin-bottom:1rem">Add to Claude Desktop, Cursor, Cline, or any MCP client:</p>
+
+    <h3 style="font-size:1.1rem;margin-bottom:.5rem;color:#333;margin-top:1rem">ChatGPT (Pro, Team, Enterprise, Edu)</h3>
+    <ol style="font-size:.9rem;color:#555;margin-bottom:1rem;padding-left:1.5rem">
+      <li>Open ChatGPT &rarr; <strong>Settings</strong> &rarr; <strong>Apps &amp; Connectors</strong> &rarr; <strong>Advanced settings</strong></li>
+      <li>Toggle <strong>Developer Mode</strong> to ON</li>
+      <li>Click <strong>Add new connector</strong></li>
+      <li>Name: <code>CompanyScope</code> &bull; URL: <code>https://companyscope-mcp.stewwilli.workers.dev/mcp</code></li>
+      <li>Authentication: <strong>No Auth</strong> &rarr; Check "I trust this application" &rarr; <strong>Create</strong></li>
+      <li>Enable Developer Mode in any chat &mdash; all 11 tools are ready</li>
+    </ol>
+
+    <h3 style="font-size:1.1rem;margin-bottom:.5rem;color:#333">Claude Desktop / Cursor / Cline</h3>
     <div class="connect">{
   "mcpServers": {
     "companyscope": {
@@ -267,8 +278,8 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
       <p style="margin-top:.5rem;font-size:.9rem;color:#555">The free version (Cloudflare Workers or npm) includes 6 core tools with 25 calls/day on the hosted version. The <a href="https://apify.com/constructive_wainscot/companyscope-mcp">Apify Actor</a> includes all 11 tools (adding competitors, patents, domain intel, job postings, social presence) with unlimited pay-per-use access and always-on cloud hosting.</p>
     </details>
     <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
-      <summary style="cursor:pointer;font-weight:600;color:#333">Does it work with Cursor, Cline, and Windsurf?</summary>
-      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint. This includes Claude Desktop, Claude Code, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol.</p>
+      <summary style="cursor:pointer;font-weight:600;color:#333">Does it work with ChatGPT, Cursor, Cline, and Windsurf?</summary>
+      <p style="margin-top:.5rem;font-size:.9rem;color:#555">Yes. Any MCP-compatible client can connect using the Streamable HTTP endpoint. This includes ChatGPT (Pro/Team/Enterprise/Edu via Developer Mode), Claude Desktop, Claude Code, Cursor, Cline, Windsurf, and any tool that supports the Model Context Protocol.</p>
     </details>
     <details style="margin-bottom:1rem;border-bottom:1px solid #eee;padding-bottom:1rem">
       <summary style="cursor:pointer;font-weight:600;color:#333">What data does it return for non-US companies?</summary>
@@ -291,7 +302,7 @@ footer{text-align:center;padding:2.5rem;color:#999;font-size:.85rem}
 
 <footer>
   CompanyScope MCP Server &mdash; Built by <a href="https://github.com/Stewyboy1990">Stewyboy1990</a>
-  <br><small>Company intelligence from 10 free data sources. 11 MCP tools. Works with Claude Desktop, Cursor, Cline, Windsurf, and any MCP client.</small>
+  <br><small>Company intelligence from 10 free data sources. 11 MCP tools. Works with ChatGPT, Claude Desktop, Cursor, Cline, Windsurf, and any MCP client.</small>
 </footer>
 </body>
 </html>
