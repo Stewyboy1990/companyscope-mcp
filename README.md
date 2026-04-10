@@ -6,7 +6,9 @@
 [![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0id2hpdGUiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDIgMC04LTMuNTgtOC04czMuNTgtOCA4LTggOCAzLjU4IDggOC0zLjU4IDgtOCA4eiIvPjwvc3ZnPg==)](cursor://anysphere.cursor-deeplink/mcp/install?name=companyscope&config=eyJtY3BTZXJ2ZXJzIjp7ImNvbXBhbnlzY29wZSI6eyJ1cmwiOiJodHRwczovL2NvbXBhbnlzY29wZS1tY3Auc3Rld3dpbGxpLndvcmtlcnMuZGV2L21jcCJ9fX0=)
 [![Apify Actor](https://img.shields.io/badge/Apify-Actor-blue?logo=apify)](https://apify.com/constructive_wainscot/companyscope-mcp)
 
-Company intelligence in one tool call. Get comprehensive company profiles — financials, tech stacks, competitors, patents, key people, job postings, domain intel, social presence, and news — from any domain or company name. Aggregates **10 free public data sources** in parallel. Works with **Claude, ChatGPT, Cursor, Windsurf, Cline**, and any MCP-compatible client.
+Company intelligence in one tool call. Get comprehensive company profiles — financials, tech stacks, competitors, patents, key people, job postings, domain intel, social presence, and news — from any domain or company name. Aggregates **12 free public data sources** in parallel. Works with **Claude, ChatGPT, Cursor, Windsurf, Cline**, and any MCP-compatible client.
+
+**[Try the live demo](https://stewyboy1990.github.io/companyscope-mcp/demo)** — enter any company name and see instant results. No signup needed.
 
 > **Want cloud-hosted, always-on access with all 11 tools?** Use the [Apify Actor](https://apify.com/constructive_wainscot/companyscope-mcp) — pay only for what you use, no infrastructure to manage.
 
