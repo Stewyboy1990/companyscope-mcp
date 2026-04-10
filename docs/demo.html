@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Try CompanyScope - Free Company Research Demo</title>
+<meta name="description" content="Try CompanyScope instantly. Enter any company name or domain and get a full intelligence report: financials, tech stack, key people, competitors, patents. No signup required.">
+<meta property="og:title" content="Try CompanyScope - Free Company Research">
+<meta property="og:description" content="Enter any company name and get instant intelligence: financials, tech stack, people, competitors, patents from 12 free sources.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stewyboy1990.github.io/companyscope-mcp/demo">
+<link rel="canonical" href="https://stewyboy1990.github.io/companyscope-mcp/demo">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1a1a2e;background:#f8f9fc;line-height:1.6}
+.hero{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:2.5rem 1.5rem;text-align:center}
+.hero h1{font-size:2rem;margin-bottom:.5rem}
+.hero p{font-size:1rem;opacity:.9;max-width:600px;margin:0 auto}
+.search-box{max-width:600px;margin:1.5rem auto 0;display:flex;gap:.5rem}
+.search-box input{flex:1;padding:.75rem 1rem;border:none;border-radius:8px;font-size:1rem;outline:none}
+.search-box button{padding:.75rem 1.5rem;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600;white-space:nowrap}
+.search-box button:hover{background:#2a2a4e}
+.search-box button:disabled{opacity:.6;cursor:not-allowed}
+.container{max-width:800px;margin:0 auto;padding:1.5rem}
+.status{text-align:center;padding:1rem;color:#667eea;font-size:.95rem}
+.error{color:#e53e3e}
+.results{display:none}
+.card{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card h3{font-size:1.1rem;color:#333;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.card h3 .icon{font-size:1.2rem}
+.field{display:flex;gap:.5rem;padding:.4rem 0;border-bottom:1px solid #f0f0f0}
+.field:last-child{border-bottom:none}
+.field-label{font-weight:600;color:#555;min-width:140px;font-size:.9rem}
+.field-value{color:#333;font-size:.9rem;word-break:break-word}
+.tag{display:inline-block;background:#e8f5e9;color:#2e7d32;padding:.15rem .5rem;border-radius:4px;font-size:.8rem;margin:.15rem}
+.tag.blue{background:#e3f2fd;color:#1565c0}
+.filing{background:#f5f5f5;border-radius:6px;padding:.5rem .75rem;margin:.25rem 0;font-size:.85rem}
+.person{background:#f0f4ff;border-radius:6px;padding:.5rem .75rem;margin:.25rem 0}
+.person-name{font-weight:600;color:#4a5aba}
+.person-title{color:#666;font-size:.85rem}
+.cta-bar{background:#fff;border-radius:12px;padding:1.25rem;margin-top:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.cta-bar h3{margin-bottom:.75rem}
+.cta-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem}
+.cta-link{display:inline-block;padding:.5rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;transition:all .2s}
+.cta-link.primary{background:#667eea;color:#fff}
+.cta-link.primary:hover{background:#5a6fd6}
+.cta-link.secondary{border:2px solid #667eea;color:#667eea}
+.cta-link.secondary:hover{background:#667eea;color:#fff}
+.cta-link.apify{background:#00c7b7;color:#fff}
+.cta-link.apify:hover{background:#00b0a1}
+.examples{text-align:center;margin-top:.75rem;font-size:.85rem;color:#999}
+.examples a{color:#667eea;cursor:pointer;text-decoration:underline}
+.raw-toggle{display:block;margin-top:.5rem;color:#667eea;cursor:pointer;font-size:.85rem;text-align:center}
+.raw-json{display:none;background:#1a1a2e;color:#e0e0e0;padding:1rem;border-radius:8px;font-family:monospace;font-size:.75rem;overflow-x:auto;white-space:pre-wrap;max-height:400px;overflow-y:auto;margin-top:.5rem}
+footer{text-align:center;padding:1.5rem;color:#999;font-size:.85rem}
+footer a{color:#667eea}
+@media(max-width:600px){.search-box{flex-direction:column}.field{flex-direction:column;gap:.1rem}.field-label{min-width:auto}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Try CompanyScope</h1>
+  <p>Enter any company name or domain. Get instant intelligence from 12 free data sources.</p>
+  <div class="search-box">
+    <input type="text" id="query" placeholder="e.g. stripe.com, Anthropic, openai.com" autofocus>
+    <button id="btn" onclick="doSearch()">Research</button>
+  </div>
+  <div class="examples">
+    Try: <a onclick="tryExample('stripe.com')">Stripe</a> | <a onclick="tryExample('anthropic.com')">Anthropic</a> | <a onclick="tryExample('apple.com')">Apple</a> | <a onclick="tryExample('tesla.com')">Tesla</a>
+  </div>
+</div>
+
+<div class="container">
+  <div id="status" class="status" style="display:none"></div>
+  <div id="results" class="results"></div>
+  <div id="cta" class="cta-bar" style="display:none">
+    <h3>Want more? Use CompanyScope in your AI workflow</h3>
+    <div class="cta-links">
+      <a class="cta-link primary" href="https://github.com/Stewyboy1990/companyscope-mcp" target="_blank">GitHub</a>
+      <a class="cta-link apify" href="https://apify.com/constructive_wainscot/companyscope-mcp" target="_blank">Apify Store</a>
+      <a class="cta-link secondary" href="https://www.npmjs.com/package/companyscope-mcp" target="_blank">npm</a>
+      <a class="cta-link secondary" href="https://glama.ai/mcp/servers/Stewyboy1990/companyscope-mcp" target="_blank">Glama</a>
+    </div>
+    <p style="margin-top:.75rem;font-size:.85rem;color:#666">
+      Connect to Claude, ChatGPT, Cursor, or any MCP client:<br>
+      <code style="background:#f0f4ff;padding:.2rem .5rem;border-radius:4px;font-size:.8rem">https://companyscope-mcp.stewwilli.workers.dev/mcp</code>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <a href="./">CompanyScope MCP</a> &mdash; Company intelligence for AI agents. 11 tools, 12 free data sources.
+</footer>
+
+<script>
+const MCP_URL = 'https://companyscope-mcp.stewwilli.workers.dev/mcp';
+const HEADERS = {'Content-Type':'application/json','Accept':'application/json, text/event-stream'};
+
+function tryExample(q) {
+  document.getElementById('query').value = q;
+  doSearch();
+}
+
+document.getElementById('query').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+
+async function mcpCall(method, params, id) {
+  const body = {jsonrpc:'2.0', method, id};
+  if (params) body.params = params;
+  const res = await fetch(MCP_URL, {method:'POST', headers:HEADERS, body:JSON.stringify(body)});
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const ct = res.headers.get('content-type') || '';
+  if (ct.includes('text/event-stream')) {
+    const text = await res.text();
+    const lines = text.split('\n');
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        try { return JSON.parse(line.slice(6)); } catch(e) {}
+      }
+    }
+    throw new Error('No data in SSE response');
+  }
+  return res.json();
+}
+
+async function doSearch() {
+  const query = document.getElementById('query').value.trim();
+  if (!query) return;
+  const btn = document.getElementById('btn');
+  const status = document.getElementById('status');
+  const results = document.getElementById('results');
+  const cta = document.getElementById('cta');
+
+  btn.disabled = true;
+  btn.textContent = 'Researching...';
+  status.style.display = 'block';
+  status.className = 'status';
+  status.textContent = 'Connecting to CompanyScope...';
+  results.style.display = 'none';
+  results.innerHTML = '';
+  cta.style.display = 'none';
+
+  try {
+    // Initialize MCP session
+    await mcpCall('initialize', {
+      protocolVersion: '2025-03-26',
+      capabilities: {},
+      clientInfo: {name: 'CompanyScope Demo', version: '1.0'}
+    }, 1);
+
+    status.textContent = 'Researching ' + query + ' across 12 data sources...';
+
+    // Call lookup_company tool
+    const result = await mcpCall('tools/call', {
+      name: 'lookup_company',
+      arguments: {query}
+    }, 2);
+
+    if (result.result && result.result.content) {
+      const text = result.result.content.find(c => c.type === 'text');
+      if (text) {
+        const data = JSON.parse(text.text);
+        renderResults(data);
+        status.style.display = 'none';
+        cta.style.display = 'block';
+      } else {
+        throw new Error('No text content in response');
+      }
+    } else if (result.error) {
+      throw new Error(result.error.message || 'MCP error');
+    }
+  } catch(e) {
+    status.className = 'status error';
+    status.textContent = 'Error: ' + e.message + '. Try again or try a different company.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Research';
+  }
+}
+
+function renderResults(d) {
+  const results = document.getElementById('results');
+  let html = '';
+
+  // Overview card
+  html += '<div class="card"><h3><span class="icon">&#127970;</span> ' + esc(d.name || d.domain || 'Company') + '</h3>';
+  if (d.description) html += '<p style="color:#555;font-size:.9rem;margin-bottom:.75rem">' + esc(d.description).slice(0,500) + '</p>';
+  const fields = [
+    ['Domain', d.domain],
+    ['Founded', d.founded],
+    ['Industry', d.industry],
+    ['Headquarters', d.headquarters],
+    ['Employees', d.employeeCount],
+    ['Website', d.website],
+  ];
+  fields.forEach(([l,v]) => { if(v) html += field(l, v); });
+  if (d.stockTickers && d.stockTickers.length) html += field('Stock', d.stockTickers.join(', ') + (d.exchanges ? ' (' + d.exchanges.join(', ') + ')' : ''));
+  html += '</div>';
+
+  // Financials
+  if (d.financials && (d.financials.revenue || d.financials.netIncome || d.financials.totalAssets)) {
+    html += '<div class="card"><h3><span class="icon">&#128176;</span> SEC Financials</h3>';
+    const f = d.financials;
+    if (f.revenue) html += field('Revenue', money(f.revenue.value) + (f.revenue.period ? ' (' + f.revenue.period + ')' : ''));
+    if (f.netIncome) html += field('Net Income', money(f.netIncome.value) + (f.netIncome.period ? ' (' + f.netIncome.period + ')' : ''));
+    if (f.totalAssets) html += field('Total Assets', money(f.totalAssets.value) + (f.totalAssets.period ? ' (' + f.totalAssets.period + ')' : ''));
+    if (f.totalLiabilities) html += field('Total Liabilities', money(f.totalLiabilities.value));
+    if (f.stockholdersEquity) html += field('Equity', money(f.stockholdersEquity.value));
+    html += '</div>';
+  }
+
+  // Recent Filings
+  if (d.recentFilings && d.recentFilings.length) {
+    html += '<div class="card"><h3><span class="icon">&#128196;</span> Recent SEC Filings</h3>';
+    d.recentFilings.slice(0,5).forEach(f => {
+      html += '<div class="filing"><strong>' + esc(f.form) + '</strong> — ' + esc(f.filingDate || '') + (f.description ? ' — ' + esc(f.description) : '') + '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Tech Stack
+  if (d.techStack && d.techStack.length) {
+    html += '<div class="card"><h3><span class="icon">&#128187;</span> Tech Stack</h3><div>';
+    d.techStack.forEach(t => { html += '<span class="tag blue">' + esc(t) + '</span>'; });
+    html += '</div></div>';
+  }
+
+  // Key People
+  if (d.keyPeople && d.keyPeople.length) {
+    html += '<div class="card"><h3><span class="icon">&#128101;</span> Key People</h3>';
+    d.keyPeople.slice(0,10).forEach(p => {
+      html += '<div class="person"><span class="person-name">' + esc(p.name) + '</span>';
+      if (p.title) html += ' <span class="person-title">— ' + esc(p.title) + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Social Profiles
+  if (d.socialProfiles) {
+    const profiles = Object.entries(d.socialProfiles).filter(([_,v]) => v);
+    if (profiles.length) {
+      html += '<div class="card"><h3><span class="icon">&#127760;</span> Social Presence</h3><div>';
+      profiles.forEach(([k,v]) => { html += '<span class="tag">' + esc(k) + '</span>'; });
+      html += '</div></div>';
+    }
+  }
+
+  // Domain Intel
+  if (d.domain_intel || d.registrar || (d.domain && typeof d.domain === 'object')) {
+    const di = d.domain_intel || d.domain || {};
+    if (typeof di === 'object' && di.registrar) {
+      html += '<div class="card"><h3><span class="icon">&#128274;</span> Domain Intel</h3>';
+      if (di.registrar) html += field('Registrar', di.registrar);
+      if (di.registrationDate) html += field('Registered', di.registrationDate);
+      if (di.expirationDate) html += field('Expires', di.expirationDate);
+      html += '</div>';
+    }
+  }
+
+  // Sources
+  if (d.sources && d.sources.length) {
+    html += '<div class="card"><h3><span class="icon">&#128218;</span> Data Sources Used</h3><div>';
+    d.sources.forEach(s => { html += '<span class="tag">' + esc(s) + '</span>'; });
+    html += '</div>';
+    if (d.confidence) html += '<div style="margin-top:.5rem;font-size:.85rem;color:#666">Confidence: ' + Math.round(d.confidence * 100) + '%</div>';
+    html += '</div>';
+  }
+
+  // Raw JSON toggle
+  html += '<a class="raw-toggle" onclick="document.getElementById(\'rawjson\').style.display=document.getElementById(\'rawjson\').style.display===\'none\'?\'block\':\'none\'">Show raw JSON</a>';
+  html += '<div id="rawjson" class="raw-json" style="display:none">' + esc(JSON.stringify(d, null, 2)) + '</div>';
+
+  results.innerHTML = html;
+  results.style.display = 'block';
+}
+
+function field(label, value) {
+  return '<div class="field"><span class="field-label">' + esc(label) + '</span><span class="field-value">' + esc(String(value)) + '</span></div>';
+}
+
+function money(v) {
+  if (!v && v !== 0) return 'N/A';
+  const n = Number(v);
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + 'T';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + (n/1e3).toFixed(1) + 'K';
+  return '$' + n.toLocaleString();
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+</body>
+</html>
