@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://stewyboy1990.github.io/companyscope-mcp/sitemap.xml
+
+# LLMs.txt - AI agent discoverability
+# See https://llmstxt.org for specification
