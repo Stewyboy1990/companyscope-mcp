@@ -1,0 +1,35 @@
+# CompanyScope MCP Server
+
+> Company intelligence MCP server with 11 tools and 12 free data sources. Research any company in one tool call.
+
+## Tools
+
+- lookup_company: Full company profile from multiple sources
+- get_financials: SEC EDGAR financial data (revenue, net income, EPS, quarterly/annual)
+- get_tech_stack: Technology detection (frameworks, analytics, CDN, CMS)
+- get_key_people: Leadership team from Wikipedia/Wikidata
+- get_competitors: Competitive landscape analysis
+- get_patents: USPTO patent search
+- get_company_news: Recent news articles
+- get_corporate_registry: OpenCorporates registration data
+- get_domain_intel: DNS, WHOIS, SSL, hosting info
+- get_job_postings: Current job listings
+- get_social_presence: Social media profiles and metrics
+
+## Connection
+
+- MCP Endpoint: https://companyscope-mcp.stewwilli.workers.dev/mcp
+- npm: npx companyscope-mcp
+- Apify: https://apify.com/constructive_wainscot/companyscope-mcp
+
+## Data Sources
+
+Wikipedia, SEC EDGAR, GitHub API, USPTO, OpenCorporates, Brave Search, DNS/RDAP, Hunter.io, web scraping, Wikidata, job boards, social media platforms
+
+## Links
+
+- [Documentation](https://stewyboy1990.github.io/companyscope-mcp/)
+- [GitHub](https://github.com/Stewyboy1990/companyscope-mcp)
+- [npm](https://www.npmjs.com/package/companyscope-mcp)
+- [Privacy Policy](https://stewyboy1990.github.io/companyscope-mcp/privacy.html)
+- [Guide](https://stewyboy1990.github.io/companyscope-mcp/guide.html)
