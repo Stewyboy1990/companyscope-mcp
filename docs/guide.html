@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Research Any Company with AI in 60 Seconds | CompanyScope MCP Guide</title>
+<meta name="description" content="Step-by-step guide to researching companies using AI agents and MCP. Get SEC financials, tech stacks, competitors, patents, and key people in one tool call. Works with Claude Desktop, ChatGPT, Cursor.">
+<meta name="keywords" content="company research AI, how to research companies with AI, MCP server tutorial, lead enrichment automation, SEC EDGAR company lookup, tech stack detection tool, AI competitive intelligence, company profile API free">
+<meta property="og:title" content="How to Research Any Company with AI in 60 Seconds">
+<meta property="og:description" content="Get SEC financials, tech stacks, competitors, patents, and key people for any company. Free MCP server with 11 tools and 12 data sources.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://stewyboy1990.github.io/companyscope-mcp/guide">
+<link rel="canonical" href="https://stewyboy1990.github.io/companyscope-mcp/guide">
+<meta property="og:image" content="https://stewyboy1990.github.io/companyscope-mcp/logo.png">
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"HowTo",
+  "name":"How to Research Any Company with AI in 60 Seconds",
+  "description":"Use CompanyScope MCP Server to get comprehensive company intelligence including SEC financials, tech stacks, competitors, patents, and key people.",
+  "totalTime":"PT1M",
+  "tool":{"@type":"HowToTool","name":"CompanyScope MCP Server"},
+  "step":[
+    {"@type":"HowToStep","name":"Install CompanyScope","text":"Run npx companyscope-mcp in your terminal, or connect via the Apify cloud endpoint."},
+    {"@type":"HowToStep","name":"Connect to your AI client","text":"Add CompanyScope to Claude Desktop, ChatGPT, Cursor, or any MCP-compatible client."},
+    {"@type":"HowToStep","name":"Ask your question","text":"Ask your AI assistant to research any company. CompanyScope returns financials, tech stack, competitors, patents, and more."}
+  ]
+}</script>
+<meta name="robots" content="index, follow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1a1a2e;background:#f8f9fc;line-height:1.7}
+.hero{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:3rem 1.5rem;text-align:center}
+.hero h1{font-size:2.2rem;margin-bottom:.75rem;font-weight:800}
+.hero p{font-size:1.1rem;opacity:.9;max-width:700px;margin:0 auto}
+.container{max-width:780px;margin:0 auto;padding:2rem 1.5rem}
+.card{background:#fff;border-radius:12px;padding:1.75rem;margin-bottom:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card h2{font-size:1.3rem;margin-bottom:.75rem;color:#333}
+.card h3{font-size:1.1rem;margin:1rem 0 .5rem;color:#444}
+pre{background:#1a1a2e;color:#e0e0e0;padding:1rem;border-radius:8px;overflow-x:auto;font-size:.85rem;margin:.75rem 0}
+code{font-family:'SF Mono',Monaco,Consolas,monospace}
+.step{counter-increment:step;position:relative;padding-left:3rem;margin-bottom:1.5rem}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:2rem;height:2rem;background:#667eea;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin-top:.75rem}
+.tool{background:#f0f0ff;padding:.75rem;border-radius:8px;font-size:.9rem}
+.tool strong{color:#667eea}
+.cta{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:2rem;border-radius:12px;text-align:center;margin:2rem 0}
+.cta a{color:#fff;text-decoration:none;font-weight:700;display:inline-block;background:rgba(255,255,255,.2);padding:.6rem 1.5rem;border-radius:8px;margin:.5rem}
+.cta a:hover{background:rgba(255,255,255,.3)}
+.breadcrumb{font-size:.85rem;color:#666;margin-bottom:1rem}
+.breadcrumb a{color:#667eea;text-decoration:none}
+a{color:#667eea}
+.use-cases{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.75rem}
+.use-case{background:#f8f8ff;padding:1rem;border-radius:8px;border-left:3px solid #667eea}
+.use-case strong{display:block;margin-bottom:.25rem}
+@media(max-width:600px){.use-cases{grid-template-columns:1fr}.hero h1{font-size:1.6rem}}
+.nav{text-align:center;padding:1rem;background:#fff;border-bottom:1px solid #eee}
+.nav a{color:#667eea;text-decoration:none;margin:0 1rem;font-weight:500}
+footer{text-align:center;padding:2rem;color:#888;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="./">Home</a>
+  <a href="./guide">Guide</a>
+  <a href="./demo">Demo</a>
+  <a href="./privacy">Privacy</a>
+</nav>
+
+<div class="hero">
+  <h1>How to Research Any Company with AI</h1>
+  <p>Get SEC financials, tech stacks, competitors, patents, and key people in a single tool call. No API keys. No subscriptions. Just ask.</p>
+</div>
+
+<div class="container">
+<p class="breadcrumb"><a href="./">CompanyScope</a> &rsaquo; Guide</p>
+
+<div class="card">
+<h2>The Problem: Company Research Takes Hours</h2>
+<p>Researching a company typically means visiting 5-10 different websites: SEC EDGAR for financials, LinkedIn for key people, Crunchbase for funding, BuiltWith for tech stack, Google Patents for IP. Each has its own interface, format, and limitations.</p>
+<p>CompanyScope aggregates <strong>12 free public data sources</strong> into a single MCP server with <strong>11 specialized tools</strong>. Your AI assistant calls the right tools automatically and synthesizes the results.</p>
+</div>
+
+<div class="card" style="counter-reset:step">
+<h2>Getting Started (3 Options)</h2>
+
+<div class="step">
+<h3>Option A: Cloud Hosted on Apify (Recommended)</h3>
+<p>No installation needed. Connect directly via MCP endpoint:</p>
+<pre><code>https://constructive-wainscot--companyscope-mcp.apify.actor/mcp</code></pre>
+<p>Runs on <a href="https://apify.com/constructive_wainscot/companyscope-mcp" rel="noopener">Apify Cloud</a> with pay-per-event pricing. Free tier available.</p>
+</div>
+
+<div class="step">
+<h3>Option B: npm (Self-Hosted)</h3>
+<p>Run locally with zero configuration:</p>
+<pre><code>npx companyscope-mcp</code></pre>
+<p>All 11 tools work immediately. No API keys required for core functionality.</p>
+</div>
+
+<div class="step">
+<h3>Option C: Claude Desktop</h3>
+<p>Add to your Claude Desktop config (<code>claude_desktop_config.json</code>):</p>
+<pre><code>{
+  "mcpServers": {
+    "companyscope": {
+      "command": "npx",
+      "args": ["-y", "companyscope-mcp"]
+    }
+  }
+}</code></pre>
+</div>
+</div>
+
+<div class="card">
+<h2>What You Can Research</h2>
+<p>CompanyScope provides 11 specialized tools, each pulling from different public data sources:</p>
+<div class="tools-grid">
+  <div class="tool"><strong>lookup_company</strong> Full company profile from Wikipedia, web, and registry data</div>
+  <div class="tool"><strong>get_financials</strong> SEC EDGAR filings: 10-K, 10-Q, revenue, profit margins</div>
+  <div class="tool"><strong>get_tech_stack</strong> Technologies detected via DNS, headers, and web analysis</div>
+  <div class="tool"><strong>get_key_people</strong> Executives and leadership from public sources</div>
+  <div class="tool"><strong>get_competitors</strong> Competitive landscape analysis from search data</div>
+  <div class="tool"><strong>get_patents</strong> USPTO patent filings and intellectual property</div>
+  <div class="tool"><strong>get_company_news</strong> Recent news articles and press coverage</div>
+  <div class="tool"><strong>get_corporate_registry</strong> OpenCorporates registration records</div>
+  <div class="tool"><strong>get_domain_intel</strong> WHOIS, DNS, SSL certificate analysis</div>
+  <div class="tool"><strong>get_job_postings</strong> Active job listings from career pages</div>
+  <div class="tool"><strong>get_social_presence</strong> Social media profiles and activity</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Real-World Use Cases</h2>
+<div class="use-cases">
+  <div class="use-case"><strong>Sales Prospecting</strong> Research target accounts before outreach. Get tech stack, key decision-makers, recent news, and competitive context in one call.</div>
+  <div class="use-case"><strong>Due Diligence</strong> Evaluate companies for investment or partnership. Pull SEC financials, patent portfolios, corporate registry data, and competitive positioning.</div>
+  <div class="use-case"><strong>Competitive Intelligence</strong> Monitor competitors' tech choices, hiring patterns (from job postings), patent filings, and news coverage automatically.</div>
+  <div class="use-case"><strong>Recruitment Research</strong> Understand company culture, tech stack, growth signals (hiring activity), and market position before interviews or outreach.</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Example: Researching Anthropic</h2>
+<p>Just ask your AI assistant: <em>"Research Anthropic for me"</em></p>
+<p>CompanyScope will automatically call the right tools and return:</p>
+<pre><code>Company: Anthropic
+Founded: 2021 | HQ: San Francisco, CA
+Industry: Artificial Intelligence Safety
+Employees: ~1,000+
+Funding: $7.3B+ raised
+
+Tech Stack: Python, React, TypeScript, AWS, Kubernetes
+Key People: Dario Amodei (CEO), Daniela Amodei (President)
+Patents: 15+ filed (constitutional AI, RLHF methods)
+Competitors: OpenAI, Google DeepMind, Cohere, Mistral
+Recent News: Claude 4 launch, $2B Amazon investment...</code></pre>
+<p>All from free public data. No API keys needed.</p>
+</div>
+
+<div class="cta">
+  <h2>Start Researching Companies Now</h2>
+  <p>Free to use. No API keys. Works with any MCP client.</p>
+  <a href="https://apify.com/constructive_wainscot/companyscope-mcp">Use on Apify (Cloud)</a>
+  <a href="https://www.npmjs.com/package/companyscope-mcp">Install via npm</a>
+  <a href="https://github.com/Stewyboy1990/companyscope-mcp">View on GitHub</a>
+</div>
+
+<div class="card">
+<h2>Integrations</h2>
+<p>CompanyScope works with any MCP-compatible client:</p>
+<ul>
+  <li><strong>Claude Desktop</strong> &mdash; Direct MCP integration via config file</li>
+  <li><strong>ChatGPT</strong> &mdash; Via MCP endpoint (coming to App Store)</li>
+  <li><strong>Cursor IDE</strong> &mdash; Built-in MCP support</li>
+  <li><strong>Cline</strong> &mdash; VSCode extension with MCP</li>
+  <li><strong>Make.com / Zapier / n8n</strong> &mdash; Via HTTP endpoint on <a href="https://apify.com/constructive_wainscot/companyscope-mcp">Apify</a></li>
+</ul>
+</div>
+
+</div>
+
+<footer>
+  <p>CompanyScope MCP Server &mdash; Open source company intelligence for AI agents</p>
+  <p><a href="https://github.com/Stewyboy1990/companyscope-mcp">GitHub</a> &middot; <a href="https://www.npmjs.com/package/companyscope-mcp">npm</a> &middot; <a href="https://apify.com/constructive_wainscot/companyscope-mcp">Apify</a></p>
+</footer>
+</body>
+</html>
