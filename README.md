@@ -57,7 +57,11 @@ claude mcp add companyscope --transport http \
 }
 ```
 
-### Option 2: Free hosted server (all 11 tools, 25 calls/day)
+### Option 2: One-click Claude Desktop install (.mcpb)
+
+Download the [CompanyScope extension](https://github.com/Stewyboy1990/companyscope-mcp/releases/latest) and double-click to install in Claude Desktop. No configuration needed.
+
+### Option 3: Free hosted server (all 11 tools, 25 calls/day)
 
 Connect to the free Cloudflare Workers endpoint:
 
@@ -78,7 +82,7 @@ claude mcp add companyscope --transport http https://companyscope-mcp.stewwilli.
 }
 ```
 
-### Option 3: ChatGPT (Pro, Team, Enterprise, Edu)
+### Option 4: ChatGPT (Pro, Team, Enterprise, Edu)
 
 Connect CompanyScope directly in ChatGPT — no installation required:
 
@@ -92,13 +96,13 @@ Connect CompanyScope directly in ChatGPT — no installation required:
 5. Check "I trust this application" → **Create**
 6. In any chat, enable Developer Mode and CompanyScope's 11 tools are available
 
-### Option 4: npm (local, stdio transport)
+### Option 5: npm (local, stdio transport)
 
 ```bash
 npx companyscope-mcp
 ```
 
-### Option 5: Self-host on Cloudflare Workers
+### Option 6: Self-host on Cloudflare Workers
 
 ```bash
 git clone https://github.com/Stewyboy1990/companyscope-mcp.git
